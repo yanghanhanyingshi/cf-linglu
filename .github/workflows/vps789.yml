@@ -24,11 +24,11 @@ jobs:
 
       - name: 安装环境
         run: |
-          pip install playwright
+          pip install playwright requests urllib3
           playwright install chromium
           playwright install-deps chromium
 
-      - name: 抓取原始数据并生成 vps789.txt
+      - name: 抓取并测速，生成文件
         run: python crawler.py
 
       - name: 提交变更
@@ -36,14 +36,13 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          # 使用 TZ 环境变量获取北京时间
           BEIJING_TIME=$(TZ=Asia/Shanghai date "+%m-%d %H:%M")
           echo "当前北京时间: $BEIJING_TIME"
 
-          git add vps789.txt
+          git add vps789.txt fastest50.txt fastest100.txt
 
-          if git diff --cached --quiet vps789.txt; then
-            echo "vps789.txt 内容无变化，跳过提交。"
+          if git diff --cached --quiet; then
+            echo "所有文件内容无变化，跳过提交。"
           else
             git commit -m "vps789 update $BEIJING_TIME"
             git pull --rebase origin main
