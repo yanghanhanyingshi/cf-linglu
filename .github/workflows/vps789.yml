@@ -29,14 +29,15 @@ jobs:
           playwright install-deps chromium
 
       - name: 抓取原始数据并生成 vps789.txt
-        run: python crawler.py   # 直接运行根目录脚本
+        run: python crawler.py
 
       - name: 提交变更
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          BEIJING_TIME=$(date -d "+8 小时之前" "+%m-%d %H:%M")
+          # 使用 TZ 环境变量获取北京时间
+          BEIJING_TIME=$(TZ=Asia/Shanghai date "+%m-%d %H:%M")
           echo "当前北京时间: $BEIJING_TIME"
 
           git add vps789.txt
