@@ -1,0 +1,31 @@
+name: VPS789
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install requests
+
+      - run: python vps789.py
+
+      - run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add vps789.txt
+          git diff --cached --quiet || git commit -m "update vps789 ip list"
+          git push origin HEAD
