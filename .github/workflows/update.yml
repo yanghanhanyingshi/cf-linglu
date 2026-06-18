@@ -9,7 +9,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # 👈 添加这一行，允许 push
+      contents: write   # 确保有推送权限
 
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +26,6 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add all.txt
+          git add all.txt fastest100.txt fastest300.txt
           git diff --cached --quiet || git commit -m "update ip list"
-          git push origin HEAD   # 明确指定分支，避免歧义
+          git push origin HEAD
