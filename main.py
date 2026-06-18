@@ -17,34 +17,38 @@ def download_source():
         print(f"Download failed: {e}")
         raise
 
-def extract_lines(text):
-    """返回完整的原始行列表，每行必须是 IP:端口#... 格式（端口可选）"""
+def extract_and_format_lines(text):
+    """
+    从每行提取 IP、端口和国家代码，生成标准格式：
+    IP:端口#国家-☆灵鹿优选☆
+    如果缺少端口则默认为 80，但通常都有。
+    """
     lines = []
-    # 匹配整行：IP:端口（可选）#任意内容
-    pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?(#.*)?$')
+    # 匹配 IP:端口（可选）和国家代码（#后紧接着两个大写字母，或更长）
+    # 国家代码可能包含连字符，但示例是 JP 等，我们取 # 后第一个连续非空白非 '-' 的字符串
+    pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?#([A-Za-z0-9]+)')
     for line in text.splitlines():
         line = line.strip()
         if not line:
             continue
-        if pattern.match(line):
-            lines.append(line)
+        m = pattern.match(line)
+        if m:
+            ip = m.group(1)
+            port = m.group(2) if m.group(2) else '80'
+            country = m.group(3)  # 例如 JP, US, HK
+            new_line = f"{ip}:{port}#{country}-☆灵鹿优选☆"
+            lines.append(new_line)
         else:
             print(f"Skipping invalid line: {line[:50]}")
     return lines
 
 def test_ip(line):
-    """测试该行对应的 IP:端口 是否可达，成功返回原始行，否则返回 None"""
+    """从标准行提取 IP 和端口进行连通性测试，成功返回原行"""
     try:
-        # 提取 IP 和端口
-        parts = line.split(':')
-        ip = parts[0]
-        # 端口可能被 # 截断，先取前两部分
-        # 如果存在 #，则端口在 # 前面；否则只有 IP 和端口
-        if '#' in line:
-            port_part = line.split('#')[0].split(':')[-1]
-        else:
-            port_part = parts[1] if len(parts) > 1 else ''
-        port = int(port_part) if port_part else 80
+        # 提取 IP:端口（#之前的部分）
+        addr = line.split('#')[0]  # 形如 IP:端口
+        ip, port = addr.split(':') if ':' in addr else (addr, '80')
+        port = int(port)
         url = f"http://{ip}:{port}"
         requests.get(url, timeout=TIMEOUT)
         return line
@@ -55,22 +59,18 @@ def main():
     print("Downloading...")
     raw = download_source()
 
-    print("Parsing...")
-    lines = extract_lines(raw)
-    print(f"Extracted {len(lines)} lines")
+    print("Parsing and formatting...")
+    formatted_lines = extract_and_format_lines(raw)
+    print(f"Extracted {len(formatted_lines)} lines")
 
-    if not lines:
+    if not formatted_lines:
         raise RuntimeError("No valid lines extracted, check source format")
 
-    # 去重：基于 IP:端口 保留第一次出现的完整行
+    # 去重：基于 IP:端口（#前部分）
     seen = set()
     unique_lines = []
-    for line in lines:
-        # 提取 IP:端口 作为 key（忽略 # 后的内容）
-        if '#' in line:
-            key = line.split('#')[0]  # 形如 IP:端口
-        else:
-            key = line  # 无 #，则整行
+    for line in formatted_lines:
+        key = line.split('#')[0]  # IP:端口
         if key not in seen:
             seen.add(key)
             unique_lines.append(line)
@@ -91,8 +91,8 @@ def main():
     if not valid:
         raise RuntimeError("No valid IPs found")
 
-    # 排序（按 IP 排序，可选）
-    valid = sorted(set(valid))  # set 去重（理论上已无重复）
+    # 排序（按 IP 排序）
+    valid = sorted(set(valid))
     Path("all.txt").write_text("\n".join(valid), encoding="utf-8")
     print(f"Saved {len(valid)} entries to all.txt")
 
