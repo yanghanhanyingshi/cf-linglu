@@ -29,7 +29,7 @@ jobs:
           playwright install-deps chromium
 
       - name: 抓取原始数据并生成 vps789.txt
-        run: python vps789/crawler.py
+        run: python crawler.py   # 直接运行根目录脚本
 
       - name: 提交变更
         run: |
@@ -39,7 +39,6 @@ jobs:
           BEIJING_TIME=$(date -d "+8 小时之前" "+%m-%d %H:%M")
           echo "当前北京时间: $BEIJING_TIME"
 
-          cd vps789/
           git add vps789.txt
 
           if git diff --cached --quiet vps789.txt; then
