@@ -8,6 +8,8 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # 👈 添加这一行，允许 push
 
     steps:
       - uses: actions/checkout@v4
@@ -16,11 +18,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - run: |
-          pip install requests
+      - run: pip install requests
 
-      - run: |
-          python main.py
+      - run: python main.py
 
       - run: |
           git config --global user.name github-actions
@@ -28,4 +28,4 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add all.txt
           git diff --cached --quiet || git commit -m "update ip list"
-          git push origin HEAD
+          git push origin HEAD   # 明确指定分支，避免歧义
