@@ -3,29 +3,50 @@ name: vps789
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 * * * *'
+
+permissions:
+  contents: write
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: 检出代码
+        uses: actions/checkout@v3
         with:
-          python-version: '3.11'
+          fetch-depth: 0
 
-      - run: pip install requests
+      - name: 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-      - run: python vps789.py
+      - name: 安装环境
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
 
-      - run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: 抓取原始数据并生成 vps789.txt
+        run: python vps789/crawler.py
+
+      - name: 提交变更
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
+          BEIJING_TIME=$(date -d "+8 小时之前" "+%m-%d %H:%M")
+          echo "当前北京时间: $BEIJING_TIME"
+
+          cd vps789/
           git add vps789.txt
-          git diff --cached --quiet || git commit -m "update vps789 ip list"
-          git push origin HEAD
+
+          if git diff --cached --quiet vps789.txt; then
+            echo "vps789.txt 内容无变化，跳过提交。"
+          else
+            git commit -m "vps789 update $BEIJING_TIME"
+            git pull --rebase origin main
+            git push origin main
+            echo "提交成功。"
+          fi
