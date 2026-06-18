@@ -25,9 +25,7 @@ jobs:
       - run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add all.txt
-
           git diff --cached --quiet || git commit -m "update ip list"
-
-          git push
+          git push origin HEAD
