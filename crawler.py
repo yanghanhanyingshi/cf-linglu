@@ -1,5 +1,23 @@
 from playwright.sync_api import sync_playwright
 import time
+import concurrent.futures
+import requests
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+TIMEOUT = 3
+MAX_WORKERS = 50
+
+def test_domain(domain):
+    try:
+        url = f"https://{domain}:443"
+        start = time.perf_counter()
+        requests.get(url, timeout=TIMEOUT, verify=False, allow_redirects=False)
+        elapsed = time.perf_counter() - start
+        return (domain, elapsed)
+    except:
+        return (domain, None)
 
 def run():
     with sync_playwright() as p:
@@ -15,52 +33,71 @@ def run():
                       wait_until="domcontentloaded", 
                       timeout=15000)
             
-            # 等待表格出现（尝试多个选择器）
             print("等待表格数据渲染...")
             try:
                 page.wait_for_selector(".el-table__row", timeout=15000)
             except:
-                # 备选：等待包含域名的元素
                 page.wait_for_selector("td", timeout=15000)
             time.sleep(2)
 
-            # 提取所有表格行
             rows = page.query_selector_all(".el-table__row")
             domains = []
             for row in rows:
-                # 取第一列（通常放置域名）
                 td = row.query_selector("td")
                 if td:
                     domain = td.inner_text().strip()
                     if domain:
                         domains.append(domain)
             
-            # 如果 rows 为空，尝试直接找所有 td 并提取文本
             if not domains:
                 print("未找到 .el-table__row，尝试直接提取所有 td...")
                 tds = page.query_selector_all("td")
                 for td in tds:
                     text = td.inner_text().strip()
-                    if text and '.' in text:  # 简单判断含有 '.' 可能是域名
+                    if text and '.' in text:
                         domains.append(text)
-                # 去重
                 domains = list(dict.fromkeys(domains))
             
-            # 去重（确保不重复）
             domains = list(dict.fromkeys(domains))
             
             if not domains:
                 raise Exception("未提取到任何域名，请检查页面结构。")
             
-            # 写入根目录的 vps789.txt
+            print(f"抓取到 {len(domains)} 个域名。")
+            
+            # 保存全部域名到 vps789.txt
             with open("vps789.txt", "w", encoding="utf-8") as f:
                 for domain in domains:
                     f.write(f"{domain}:443#☆灵鹿优选☆\n")
+            print("已保存全部域名到 vps789.txt")
             
-            print(f"提取完成！抓取到 {len(domains)} 个域名，已保存为 vps789.txt。")
+            # 测速
+            print("开始测速...")
+            results = []
+            with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                futures = {executor.submit(test_domain, domain): domain for domain in domains}
+                for future in concurrent.futures.as_completed(futures):
+                    domain, delay = future.result()
+                    if delay is not None:
+                        results.append((domain, delay))
+            
+            results.sort(key=lambda x: x[1])
+            print(f"成功测速 {len(results)} 个域名。")
+            
+            fastest_50 = results[:50] if len(results) >= 50 else results
+            fastest_100 = results[:100] if len(results) >= 100 else results
+            
+            def save_list(filename, data_list):
+                with open(filename, "w", encoding="utf-8") as f:
+                    for domain, _ in data_list:
+                        f.write(f"{domain}:443#☆灵鹿优选☆\n")
+                print(f"已保存 {len(data_list)} 个到 {filename}")
+            
+            save_list("fastest50.txt", fastest_50)
+            save_list("fastest100.txt", fastest_100)
+            
         except Exception as e:
             print(f"❌ 抓取过程中发生错误: {e}")
-            # 可选：保存页面截图用于调试
             page.screenshot(path="error.png")
             raise e
         finally:
