@@ -8,96 +8,72 @@ SOURCE_URL = "https://zip.cm.edu.kg/all.txt"
 TIMEOUT = 3
 MAX_WORKERS = 100
 
+
 def download_source():
-r = requests.get(SOURCE_URL, timeout=15)
-r.raise_for_status()
-return r.text
+    r = requests.get(SOURCE_URL, timeout=15)
+    r.raise_for_status()
+    return r.text
+
 
 def extract_ips(text):
-ips = []
+    ips = []
 
-for line in text.splitlines():
-    line = line.strip()
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
 
-    if not line:
-        continue
+        if re.search(r'((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?', line):
+            ips.append(line)
 
-    m = re.search(
-        r'((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?',
-        line
-    )
+    return ips
 
-    if m:
-        ips.append(line)
-
-return ips
 
 def test_ip(item):
-try:
-m = re.search(
-r'((?:\d{1,3}.){3}\d{1,3})(?::(\d+))?',
-item
-)
+    try:
+        m = re.search(r'((?:\d{1,3}\.){3}\d{1,3})', item)
+        if not m:
+            return None
 
-    if not m:
+        ip = m.group(1)
+        url = f"http://{ip}"
+
+        requests.get(url, timeout=TIMEOUT)
+        return item
+
+    except:
         return None
 
-    ip = m.group(1)
-
-    url = f"http://{ip}"
-
-    requests.get(
-        url,
-        timeout=TIMEOUT,
-        allow_redirects=True
-    )
-
-    return item
-
-except:
-    return None
 
 def main():
+    print("Downloading...")
+    raw = download_source()
 
-print("Downloading source...")
-raw = download_source()
+    print("Parsing...")
+    ips = extract_ips(raw)
 
-print("Parsing...")
-ips = extract_ips(raw)
+    print("Total:", len(ips))
 
-print("Total:", len(ips))
+    ips = list(dict.fromkeys(ips))
 
-ips = list(dict.fromkeys(ips))
+    print("After dedupe:", len(ips))
 
-print("After dedupe:", len(ips))
+    valid = []
 
-valid = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = [executor.submit(test_ip, ip) for ip in ips]
 
-with concurrent.futures.ThreadPoolExecutor(
-    max_workers=MAX_WORKERS
-) as executor:
+        for f in concurrent.futures.as_completed(futures):
+            r = f.result()
+            if r:
+                valid.append(r)
 
-    futures = [
-        executor.submit(test_ip, ip)
-        for ip in ips
-    ]
+    valid = sorted(set(valid))
 
-    for future in concurrent.futures.as_completed(futures):
-        result = future.result()
+    Path("all.txt").write_text("\n".join(valid), encoding="utf-8")
 
-        if result:
-            valid.append(result)
+    print("Saved:", len(valid))
 
-valid = sorted(set(valid))
 
-print("Valid:", len(valid))
-
-Path("all.txt").write_text(
-    "\n".join(valid),
-    encoding="utf-8"
-)
-
-print("Saved -> all.txt")
-
-if name == "main":
-main()
+if __name__ == "__main__":
+    main()
