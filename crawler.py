@@ -15,21 +15,42 @@ def run():
                       wait_until="domcontentloaded", 
                       timeout=15000)
             
+            # 等待表格出现（尝试多个选择器）
             print("等待表格数据渲染...")
-            page.wait_for_selector(".el-table__row", timeout=15000)
+            try:
+                page.wait_for_selector(".el-table__row", timeout=15000)
+            except:
+                # 备选：等待包含域名的元素
+                page.wait_for_selector("td", timeout=15000)
             time.sleep(2)
 
+            # 提取所有表格行
             rows = page.query_selector_all(".el-table__row")
             domains = []
             for row in rows:
+                # 取第一列（通常放置域名）
                 td = row.query_selector("td")
                 if td:
                     domain = td.inner_text().strip()
                     if domain:
                         domains.append(domain)
             
-            # 去重
+            # 如果 rows 为空，尝试直接找所有 td 并提取文本
+            if not domains:
+                print("未找到 .el-table__row，尝试直接提取所有 td...")
+                tds = page.query_selector_all("td")
+                for td in tds:
+                    text = td.inner_text().strip()
+                    if text and '.' in text:  # 简单判断含有 '.' 可能是域名
+                        domains.append(text)
+                # 去重
+                domains = list(dict.fromkeys(domains))
+            
+            # 去重（确保不重复）
             domains = list(dict.fromkeys(domains))
+            
+            if not domains:
+                raise Exception("未提取到任何域名，请检查页面结构。")
             
             # 写入根目录的 vps789.txt
             with open("vps789.txt", "w", encoding="utf-8") as f:
@@ -39,6 +60,8 @@ def run():
             print(f"提取完成！抓取到 {len(domains)} 个域名，已保存为 vps789.txt。")
         except Exception as e:
             print(f"❌ 抓取过程中发生错误: {e}")
+            # 可选：保存页面截图用于调试
+            page.screenshot(path="error.png")
             raise e
         finally:
             browser.close()
