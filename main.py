@@ -8,13 +8,18 @@ TIMEOUT = 3
 MAX_WORKERS = 100
 
 def download_source():
-    r = requests.get(SOURCE_URL, timeout=15)
-    r.raise_for_status()
-    return r.text
+    try:
+        r = requests.get(SOURCE_URL, timeout=15)
+        r.raise_for_status()
+        print(f"Downloaded {len(r.text)} bytes")
+        return r.text
+    except Exception as e:
+        print(f"Download failed: {e}")
+        raise  # 让工作流失败
 
 def extract_ips(text):
     ips = []
-    # 匹配 IP:端口 或纯 IP
+    # 兼容多种格式：纯IP、IP:端口、可能包含空格
     pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?$')
     for line in text.splitlines():
         line = line.strip()
@@ -22,11 +27,12 @@ def extract_ips(text):
             continue
         if pattern.match(line):
             ips.append(line)
+        else:
+            print(f"Skipping invalid line: {line[:50]}")  # 打印部分内容供调试
     return ips
 
 def test_ip(item):
     try:
-        # 分离 IP 和端口
         parts = item.split(':')
         ip = parts[0]
         port = int(parts[1]) if len(parts) > 1 else 80
@@ -42,10 +48,14 @@ def main():
 
     print("Parsing...")
     ips = extract_ips(raw)
-    print("Total:", len(ips))
+    print(f"Extracted {len(ips)} IP entries")
 
+    if not ips:
+        raise RuntimeError("No IPs extracted from source")
+
+    # 去重
     ips = list(dict.fromkeys(ips))
-    print("After dedupe:", len(ips))
+    print(f"After dedupe: {len(ips)}")
 
     valid = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -55,9 +65,14 @@ def main():
             if r:
                 valid.append(r)
 
+    print(f"Valid IPs after testing: {len(valid)}")
+
+    if not valid:
+        raise RuntimeError("No valid IPs found")
+
     valid = sorted(set(valid))
     Path("all.txt").write_text("\n".join(valid), encoding="utf-8")
-    print("Saved:", len(valid))
+    print(f"Saved {len(valid)} IPs to all.txt")
 
 if __name__ == "__main__":
     main()
