@@ -29,7 +29,7 @@ jobs:
           playwright install-deps chromium
 
       - name: 抓取并测速，生成文件
-        run: python crawler.py
+        run: python vps789.py   # 运行重命名后的脚本
 
       - name: 提交变更
         run: |
@@ -39,7 +39,7 @@ jobs:
           BEIJING_TIME=$(TZ=Asia/Shanghai date "+%m-%d %H:%M")
           echo "当前北京时间: $BEIJING_TIME"
 
-          git add vps789.txt fastest50.txt fastest100.txt
+          git add vps789.txt vps789-50.txt vps789-100.txt
 
           if git diff --cached --quiet; then
             echo "所有文件内容无变化，跳过提交。"
