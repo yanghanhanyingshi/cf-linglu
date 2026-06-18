@@ -1,6 +1,7 @@
 import requests
 import concurrent.futures
 import re
+import time
 from pathlib import Path
 
 SOURCE_URL = "https://zip.cm.edu.kg/all.txt"
@@ -21,11 +22,8 @@ def extract_and_format_lines(text):
     """
     从每行提取 IP、端口和国家代码，生成标准格式：
     IP:端口#国家-☆灵鹿优选☆
-    如果缺少端口则默认为 80，但通常都有。
     """
     lines = []
-    # 匹配 IP:端口（可选）和国家代码（#后紧接着两个大写字母，或更长）
-    # 国家代码可能包含连字符，但示例是 JP 等，我们取 # 后第一个连续非空白非 '-' 的字符串
     pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?#([A-Za-z0-9]+)')
     for line in text.splitlines():
         line = line.strip()
@@ -35,23 +33,24 @@ def extract_and_format_lines(text):
         if m:
             ip = m.group(1)
             port = m.group(2) if m.group(2) else '80'
-            country = m.group(3)  # 例如 JP, US, HK
+            country = m.group(3)
             new_line = f"{ip}:{port}#{country}-☆灵鹿优选☆"
             lines.append(new_line)
         else:
             print(f"Skipping invalid line: {line[:50]}")
     return lines
 
-def test_ip(line):
-    """从标准行提取 IP 和端口进行连通性测试，成功返回原行"""
+def test_ip_with_speed(line):
+    """测试连通性并返回 (line, delay) 或 None"""
     try:
-        # 提取 IP:端口（#之前的部分）
-        addr = line.split('#')[0]  # 形如 IP:端口
+        addr = line.split('#')[0]  # IP:端口
         ip, port = addr.split(':') if ':' in addr else (addr, '80')
         port = int(port)
         url = f"http://{ip}:{port}"
+        start = time.perf_counter()
         requests.get(url, timeout=TIMEOUT)
-        return line
+        elapsed = time.perf_counter() - start
+        return (line, elapsed)
     except:
         return None
 
@@ -66,35 +65,49 @@ def main():
     if not formatted_lines:
         raise RuntimeError("No valid lines extracted, check source format")
 
-    # 去重：基于 IP:端口（#前部分）
+    # 去重：基于 IP:端口
     seen = set()
     unique_lines = []
     for line in formatted_lines:
-        key = line.split('#')[0]  # IP:端口
+        key = line.split('#')[0]
         if key not in seen:
             seen.add(key)
             unique_lines.append(line)
 
     print(f"After dedupe: {len(unique_lines)}")
 
-    # 测试连通性
-    valid = []
+    # 并发测试并记录速度
+    print("Testing connectivity and measuring speed...")
+    results = []  # 存放 (line, delay) 元组
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = [executor.submit(test_ip, line) for line in unique_lines]
+        futures = [executor.submit(test_ip_with_speed, line) for line in unique_lines]
         for f in concurrent.futures.as_completed(futures):
-            r = f.result()
-            if r:
-                valid.append(r)
+            res = f.result()
+            if res:
+                results.append(res)
 
-    print(f"Valid after testing: {len(valid)}")
+    print(f"Valid IPs after testing: {len(results)}")
 
-    if not valid:
+    if not results:
         raise RuntimeError("No valid IPs found")
 
-    # 排序（按 IP 排序）
-    valid = sorted(set(valid))
-    Path("all.txt").write_text("\n".join(valid), encoding="utf-8")
-    print(f"Saved {len(valid)} entries to all.txt")
+    # 按延迟排序（从小到大）
+    results.sort(key=lambda x: x[1])
+    sorted_lines = [line for line, _ in results]
+
+    # 保存所有有效IP到 all.txt
+    Path("all.txt").write_text("\n".join(sorted_lines), encoding="utf-8")
+    print(f"Saved all {len(sorted_lines)} entries to all.txt")
+
+    # 保存最快100和300
+    fastest_100 = sorted_lines[:100] if len(sorted_lines) >= 100 else sorted_lines
+    fastest_300 = sorted_lines[:300] if len(sorted_lines) >= 300 else sorted_lines
+
+    Path("fastest100.txt").write_text("\n".join(fastest_100), encoding="utf-8")
+    Path("fastest300.txt").write_text("\n".join(fastest_300), encoding="utf-8")
+    print(f"Saved {len(fastest_100)} fastest IPs to fastest100.txt")
+    print(f"Saved {len(fastest_300)} fastest IPs to fastest300.txt")
 
 if __name__ == "__main__":
     main()
