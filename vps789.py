@@ -11,12 +11,12 @@ MAX_WORKERS = 100
 
 def download_source():
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
+        headers = {'User-Agent': 'Mozilla/5.0'}
         r = requests.get(SOURCE_URL, timeout=15, headers=headers)
         r.raise_for_status()
         print(f"Downloaded {len(r.text)} bytes")
+        # 打印前 500 字符，便于调试
+        print("Raw response preview:", r.text[:500])
         return r.text
     except Exception as e:
         print(f"Download failed: {e}")
@@ -24,8 +24,8 @@ def download_source():
 
 def extract_ips_from_json(text):
     """
-    从 JSON 响应中递归提取所有形如 IP:端口 的字符串
-    忽略非 IP 内容
+    从 JSON 响应中递归提取所有 IP:端口 字符串。
+    如果 JSON 解析失败，回退到按行提取。
     """
     try:
         data = json.loads(text)
@@ -33,9 +33,8 @@ def extract_ips_from_json(text):
         print("Response is not JSON, fallback to line-by-line")
         return extract_ips_from_text(text)
 
-    # 将 JSON 转换为字符串，然后正则匹配所有 IP:端口
+    # 将整个 JSON 转成字符串，然后用正则匹配所有 IP:端口
     json_str = json.dumps(data)
-    # 匹配 IP:端口 或纯 IP（端口可选）
     pattern = re.compile(r'((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?')
     matches = pattern.findall(json_str)
     ips = []
@@ -45,9 +44,9 @@ def extract_ips_from_json(text):
     return ips
 
 def extract_ips_from_text(text):
-    """备用：按行提取（如果非 JSON）"""
-    lines = []
+    """按行提取 IP:端口（备用）"""
     pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?')
+    ips = []
     for line in text.splitlines():
         line = line.strip()
         if not line:
@@ -56,13 +55,12 @@ def extract_ips_from_text(text):
         if m:
             ip = m.group(1)
             port = m.group(2) if m.group(2) else '80'
-            lines.append(f"{ip}:{port}")
-    return lines
+            ips.append(f"{ip}:{port}")
+    return ips
 
 def test_ip_with_speed(line):
-    """测试连通性，返回 (line, delay)"""
+    """测试连通性，返回 (line, delay) 或 None"""
     try:
-        # 从行中提取 IP 和端口（格式 IP:端口）
         addr = line.split('-')[0]  # 去掉可能的后缀
         ip, port = addr.split(':')
         port = int(port)
@@ -83,6 +81,8 @@ def main():
     print(f"Extracted {len(raw_ips)} IP:port entries")
 
     if not raw_ips:
+        # 打印帮助信息
+        print("No IPs found. Please check the API response preview above.")
         raise RuntimeError("No IPs extracted, check source format")
 
     # 去重
