@@ -19,7 +19,7 @@ def download_source():
 
 def extract_ips(text):
     ips = []
-    # 匹配 IP:端口 或纯 IP，允许后面跟着 # 和任意内容
+    # 匹配 IP:端口（端口可选），忽略 # 后的任何内容
     pattern = re.compile(r'^((?:\d{1,3}\.){3}\d{1,3})(?::(\d+))?(?:#.*)?$')
     for line in text.splitlines():
         line = line.strip()
@@ -29,7 +29,6 @@ def extract_ips(text):
         if m:
             ip = m.group(1)
             port = m.group(2) if m.group(2) else ''
-            # 保留原始格式（不带#）以便测试
             if port:
                 ips.append(f"{ip}:{port}")
             else:
@@ -58,10 +57,6 @@ def main():
     print(f"Extracted {len(ips)} IP entries")
 
     if not ips:
-        # 不要停止，可能源文件格式改变，但为了调试，打印警告
-        print("Warning: No IPs extracted, will exit with empty file?")
-        # 可以退出，但为了不浪费运行，仍然继续（但会保存空文件）
-        # 建议退出以避免提交空文件
         raise RuntimeError("No IPs extracted, check source format")
 
     ips = list(dict.fromkeys(ips))
