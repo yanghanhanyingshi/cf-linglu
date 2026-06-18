@@ -1,4 +1,4 @@
-name: VPS789
+name: vps789
 
 on:
   workflow_dispatch:
