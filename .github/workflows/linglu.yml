@@ -26,7 +26,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests urllib3 pybase64   # ← 添加 pybase64
+        pip install requests urllib3 pybase64
         
     - name: Run IP Test
       run: |
@@ -37,18 +37,15 @@ jobs:
       with:
         name: ip-results
         path: |
-          linglu-01.txt
-          linglu-02.txt
-          linglu-03.txt
-          linglu-04.txt
-          linglu-05.txt
-          linglu.log
-          Cache.json
+          output/*.txt
+          output/Base64/*.txt
           
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add linglu-01.txt linglu-02.txt linglu-03.txt linglu-04.txt linglu-05.txt Cache.json
+        # 添加所有 output 目录下的文件（包括子目录）
+        git add output/
+        # 如果有其他需要提交的根目录文件可在此添加，但脚本没有生成
         git diff --staged --quiet || git commit -m "Update IP results - $(date)"
         git push
