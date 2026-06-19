@@ -24,16 +24,7 @@ def run():
         try:
             print("正在打开：api.uouin.com/cloudflare.html")
             page.goto("https://api.uouin.com/cloudflare.html", timeout=60000)
-            
-            # 等待页面内容加载（等待包含IP的标签出现）
-            page.wait_for_selector("body", timeout=30000)
-            time.sleep(5)  # 额外等待
-
-            # 保存页面源代码以便调试
-            html = page.content()
-            with open("page_debug.html", "w", encoding="utf-8") as f:
-                f.write(html)
-            print("已保存页面源代码到 page_debug.html")
+            time.sleep(12)
 
             page_text = page.inner_text("body")
             ip_pattern = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
@@ -48,24 +39,19 @@ def run():
             unique_ips = list(set(valid_ips))
             unique_ips.sort()
 
-            # 强制添加格式
-            formatted_lines = [f"{ip}:443#☆灵鹿优选☆" for ip in unique_ips]
+            # 强制添加端口和后缀，格式为 IP:443#☆灵鹿优选☆
+            formatted_ips = [f"{ip}:443#☆灵鹿优选☆" for ip in unique_ips]
 
-            # 写入文件（即使为空也写入）
-            with open("qilin_ip.txt", "w", encoding="utf-8") as f:
-                f.write("\n".join(formatted_lines))
+            # 保存到根目录（不再使用子目录）
+            save_path = "qilin_ip.txt"
+            with open(save_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(formatted_ips))
 
-            if formatted_lines:
-                print(f"✅ 抓取完成！共获取 {len(formatted_lines)} 个优选IP（已格式化）")
-            else:
-                print("⚠️ 警告：未提取到任何IP，已写入空文件。")
+            print(f"✅ 抓取完成！共获取 {len(formatted_ips)} 个优选IP（已格式化）")
 
         except Exception as e:
             print(f"❌ 错误：{str(e)}")
-            # 发生错误时也尝试写入空文件，防止工作流因文件缺失而失败
-            with open("qilin_ip.txt", "w", encoding="utf-8") as f:
-                f.write("")
-            raise e
+            raise
         finally:
             browser.close()
 
