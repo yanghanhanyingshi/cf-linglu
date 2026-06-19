@@ -1,4 +1,4 @@
-name: 洛璃优选
+name: luoli
 
 on:
   workflow_dispatch:
@@ -17,139 +17,77 @@ jobs:
         env:
           LUOLI_URL: ${{ secrets.LUOLI_URL }}
         run: |
-          echo "=========================================="
           echo "开始请求目标链接..."
-          echo "=========================================="
           
           if [ -z "$LUOLI_URL" ]; then
-            echo "❌ 错误：未检测到 LUOLI_URL Secret"
-            echo "请在仓库 Settings -> Secrets and variables -> Actions 中设置"
+            echo "错误：未检测到 LUOLI_URL"
             exit 1
           fi
           
-          echo "✅ LUOLI_URL 已配置"
-          echo "正在下载数据..."
-          
-          # 下载并保存原始数据
-          curl -sS -L -A "Clash" --retry 3 --retry-delay 3 "$LUOLI_URL" -o raw_nodes.txt
-          CURL_EXIT=$?
-          
-          if [ $CURL_EXIT -ne 0 ]; then
-            echo "❌ 错误：curl 下载失败，退出码: $CURL_EXIT"
+          if ! curl -sS -L -A "Clash" --retry 3 --retry-delay 3 "$LUOLI_URL" -o raw_nodes.txt; then
+            echo "错误：请求目标链接失败！"
             exit 1
           fi
-          
-          FILE_SIZE=$(wc -c < raw_nodes.txt)
-          echo "下载完成，文件大小: $FILE_SIZE 字节"
-          
-          if [ "$FILE_SIZE" -eq 0 ]; then
-            echo "❌ 错误：下载的内容为空！"
+
+          if [ ! -s raw_nodes.txt ]; then
+            echo "错误：下载的内容为空！"
             exit 1
           fi
+
+          NODE_COUNT=$(grep -c -E '[0-9a-zA-Z\.-]+:[0-9]+' raw_nodes.txt || true)
           
-          echo ""
-          echo "=========================================="
-          echo "原始数据前 30 行预览："
-          echo "=========================================="
-          head -30 raw_nodes.txt
-          echo "=========================================="
-          
-          # 检测原始有效节点数（IP:端口）
-          NODE_COUNT=$(grep -c -E '\b([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]+\b' raw_nodes.txt || true)
-          echo "检测到原始有效节点数量: $NODE_COUNT"
-          
+          echo "检查完毕，当前下载的文件中包含有效节点数量: $NODE_COUNT"
+
           if [ "$NODE_COUNT" -lt 3 ]; then
             echo "=========================================================="
-            echo "❌ 警告：有效节点数量 ($NODE_COUNT) 少于 3 个！"
-            echo "请检查源数据格式是否包含 IP:端口 格式的内容"
+            echo "❌ 警告：检测到有效节点数量 ($NODE_COUNT) 少于 3 个！"
+            echo "为了保护原有数据不被污染，本次工作流将拒绝写入并强行终止！"
             echo "=========================================================="
             exit 1
           fi
-          
+
           mkdir -p luoli
           
-          # 格式化数据：提取 IP:端口，添加 #国家-☆灵鹿优选☆
-          echo "正在格式化数据..."
-          > luoli/all.txt
-          FORMATTED_COUNT=0
+          cat raw_nodes.txt > luoli/all.txt
           
-          while IFS= read -r line; do
-            line=$(echo "$line" | tr -d '\r' | tr -d '\n')
-            if [ -z "$line" ]; then
-              continue
-            fi
-            
-            # 提取 IP:端口
-            ip_port=$(echo "$line" | grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]+\b' | head -1)
-            
-            if [ -n "$ip_port" ]; then
-              # 提取国家代码（格式：#US 或 #JP 等）
-              country=$(echo "$line" | grep -oE '#[A-Z]{2}' | head -1 | sed 's/#//')
-              if [ -z "$country" ]; then
-                # 尝试匹配两位大写字母（可能在其他位置）
-                country=$(echo "$line" | grep -oE '\b[A-Z]{2}\b' | head -1)
-                if [ -z "$country" ] || [ ${#country} -ne 2 ]; then
-                  country="未知"
-                fi
-              fi
-              echo "${ip_port}#${country}-☆灵鹿优选☆" >> luoli/all.txt
-              FORMATTED_COUNT=$((FORMATTED_COUNT + 1))
-            fi
-          done < raw_nodes.txt
-          
-          echo "格式化后有效节点数量: $FORMATTED_COUNT"
-          
-          if [ "$FORMATTED_COUNT" -lt 3 ]; then
-            echo "=========================================================="
-            echo "❌ 警告：格式化后节点数量少于 3 个！"
-            echo "=========================================================="
-            exit 1
+          if [ "$(tail -c1 luoli/all.txt)" != "" ]; then
+            echo "" >> luoli/all.txt
           fi
           
-          echo ""
-          echo "=========================================="
-          echo "格式化后数据预览（前20行）："
-          echo "=========================================="
-          head -20 luoli/all.txt
-          echo "=========================================="
-          
-          echo "✅ 数据格式化完成，luoli/all.txt 文件生成成功！"
+          echo "数据校验通过，all.txt 文件生成成功！"
 
       - name: 提交并推送文件
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          TARGET_FILE="luoli/all.txt"
+          # 核心改动：智能排除带有特定标志的动态广告/时间行进行增量比对
           HAS_CHANGES=false
+          TARGET_FILE="luoli/all.txt"
 
           if [ -f "$TARGET_FILE" ] && git ls-files --error-unmatch "$TARGET_FILE" >/dev/null 2>&1; then
             echo "比对文本..."
             
-            git show HEAD:"$TARGET_FILE" > old_full.tmp 2>/dev/null || true
-            grep -v "BestCF.pages.dev" old_full.tmp > old_clean.tmp 2>/dev/null || true
-            grep -v "BestCF.pages.dev" "$TARGET_FILE" > new_clean.tmp 2>/dev/null || true
+            git show HEAD:"$TARGET_FILE" | grep -v "BestCF.pages.dev" > old_clean.tmp || true
+            grep -v "BestCF.pages.dev" "$TARGET_FILE" > new_clean.tmp || true
             
             if diff -q old_clean.tmp new_clean.tmp >/dev/null 2>&1; then
-              echo "✅ 优选未发生变化，跳过本次提交。"
+              echo "优选未发生变化，跳过本次提交。"
               HAS_CHANGES=false
             else
-              echo "🔄 检测到核心节点发生实质性更新！"
+              echo "检测到核心节点发生实质性更新！"
               HAS_CHANGES=true
             fi
             
-            rm -f old_full.tmp old_clean.tmp new_clean.tmp 2>/dev/null || true
+            rm -f old_clean.tmp new_clean.tmp
           else
-            echo "📄 新文件或首次初始化，标记为有更新。"
+            echo "新文件或首次初始化，直接标记为有更新。"
             HAS_CHANGES=true
           fi
 
           if [ "$HAS_CHANGES" = true ]; then
             git add "$TARGET_FILE"
-            git commit -m "洛璃优选 $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+            git commit -m "luoli $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
             git pull --rebase origin main
             git push
-            echo "✅ 提交成功"
-          else
-            echo "⏭️ 跳过提交"
           fi
