@@ -1,6 +1,6 @@
-name: IP Test
+name: 灵鹿IP 
 
-on:
+于:
   schedule:
     - cron: '0 */3 * * *'
   workflow_dispatch:
