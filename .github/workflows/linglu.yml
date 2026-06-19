@@ -1,6 +1,6 @@
 name: 灵鹿IP
 
-于:
+on:
   schedule:
     - cron: '0 */3 * * *'
   workflow_dispatch:
