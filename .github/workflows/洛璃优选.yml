@@ -1,0 +1,124 @@
+name: 洛璃优选
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 请求订阅并校验数据
+        env:
+          LUOLI_URL: ${{ secrets.LUOLI_URL }}
+        run: |
+          echo "开始请求目标链接..."
+          
+          if [ -z "$LUOLI_URL" ]; then
+            echo "错误：未检测到 LUOLI_URL"
+            exit 1
+          fi
+          
+          if ! curl -sS -L -A "Clash" --retry 3 --retry-delay 3 "$LUOLI_URL" -o raw_nodes.txt; then
+            echo "错误：请求目标链接失败！"
+            exit 1
+          fi
+
+          if [ ! -s raw_nodes.txt ]; then
+            echo "错误：下载的内容为空！"
+            exit 1
+          fi
+
+          # 检测有效节点数量（IP:端口 格式）
+          NODE_COUNT=$(grep -c -E '\b([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]+\b' raw_nodes.txt || true)
+          
+          echo "检查完毕，当前下载的文件中包含有效节点数量: $NODE_COUNT"
+
+          if [ "$NODE_COUNT" -lt 3 ]; then
+            echo "=========================================================="
+            echo "❌ 警告：检测到有效节点数量 ($NODE_COUNT) 少于 3 个！"
+            echo "为了保护原有数据不被污染，本次工作流将拒绝写入并强行终止！"
+            echo "=========================================================="
+            exit 1
+          fi
+
+          mkdir -p luoli
+          
+          # 处理每行格式：IP:端口 -> IP:端口#国家-☆灵鹿优选☆
+          # 尝试从原行提取国家代码（如果存在），否则默认为"未知"
+          echo "正在格式化数据..."
+          > luoli/all.txt
+          
+          while IFS= read -r line; do
+            line=$(echo "$line" | tr -d '\r')
+            if [ -z "$line" ]; then
+              continue
+            fi
+            
+            # 提取 IP 和端口
+            ip_port=$(echo "$line" | grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]+\b' | head -1)
+            
+            if [ -n "$ip_port" ]; then
+              # 尝试从原始行提取国家代码（格式示例：IP:端口#US 或 IP:端口#美国）
+              country=$(echo "$line" | grep -oE '#[A-Z]{2}' | head -1 | sed 's/#//')
+              if [ -z "$country" ]; then
+                country="未知"
+              fi
+              echo "${ip_port}#${country}-☆灵鹿优选☆" >> luoli/all.txt
+            fi
+          done < raw_nodes.txt
+
+          # 检查格式化后的文件是否有内容
+          FORMATTED_COUNT=$(grep -c -E ':[0-9]+#.*-☆灵鹿优选☆' luoli/all.txt || true)
+          echo "格式化后有效节点数量: $FORMATTED_COUNT"
+          
+          if [ "$FORMATTED_COUNT" -lt 3 ]; then
+            echo "=========================================================="
+            echo "❌ 警告：格式化后有效节点数量少于 3 个！"
+            echo "=========================================================="
+            exit 1
+          fi
+          
+          echo "数据格式化完成，luoli/all.txt 文件生成成功！"
+
+      - name: 提交并推送文件
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          TARGET_FILE="luoli/all.txt"
+          HAS_CHANGES=false
+
+          if [ -f "$TARGET_FILE" ] && git ls-files --error-unmatch "$TARGET_FILE" >/dev/null 2>&1; then
+            echo "比对文本..."
+            
+            # 比对时跳过带 ☆灵鹿优选☆ 标记的行（因为标记固定，不会变化）
+            git show HEAD:"$TARGET_FILE" | grep -v "BestCF.pages.dev" > old_clean.tmp || true
+            grep -v "BestCF.pages.dev" "$TARGET_FILE" > new_clean.tmp || true
+            
+            if diff -q old_clean.tmp new_clean.tmp >/dev/null 2>&1; then
+              echo "优选未发生变化，跳过本次提交。"
+              HAS_CHANGES=false
+            else
+              echo "检测到核心节点发生实质性更新！"
+              HAS_CHANGES=true
+            fi
+            
+            rm -f old_clean.tmp new_clean.tmp
+          else
+            echo "新文件或首次初始化，直接标记为有更新。"
+            HAS_CHANGES=true
+          fi
+
+          if [ "$HAS_CHANGES" = true ]; then
+            git add "$TARGET_FILE"
+            git commit -m "洛璃优选 $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+            git pull --rebase origin main
+            git push
+            echo "✅ 提交成功"
+          fi
