@@ -1,4 +1,4 @@
-name: IP Test
+name: 灵鹿爬取
 
 on:
   schedule:
