@@ -1,4 +1,4 @@
-name: Update IP List
+name: 上万IP
 
 on:
   workflow_dispatch:
