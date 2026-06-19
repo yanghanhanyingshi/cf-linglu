@@ -1,399 +1,202 @@
-import re
-import os
-import time
-import socket
-import json
-import logging
-from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from collections import defaultdict
+import pybase64
+import base64
 import requests
-from urllib3.exceptions import InsecureRequestWarning
+import binascii
+import os
+import sys
 
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+# ===================== 全局配置 =====================
+TIMEOUT = 15
+OUTPUT_ROOT = "output"
+BASE64_SUB_FOLDER = os.path.join(OUTPUT_ROOT, "Base64")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('linglu.log', encoding='utf-8'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+# 强制标题前缀（所有订阅文件都会加上）
+TITLE_PREFIX = "☆灵鹿收集☆ "
 
-# ===== 核心配置 =====
-CONFIG = {
-    "ip_sources": [
-        'https://api.uouin.com/cloudflare.html',
-        'https://api.urlce.com/cloudflare.html',
-        'https://addressesapi.090227.xyz/CloudFlareYes',
-        'https://cf.090227.xyz/CloudFlareYes',
-        'https://stock.hostmonit.com/CloudFlareYes',
-        'https://vps789.com/openApi/cfIpTop20',
-        'https://vps789.com/openApi/cfIpApi',
-        'https://www.wetest.vip/page/cloudflare/total_v4.html',
-        'https://www.wetest.vip/page/cloudflare/address_v4.html',
-        'https://cf.090227.xyz/cmcc',
-        'https://cf.090227.xyz/ct',
-        'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt',
-        'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-        'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/addressesapi.txt',
-        
-    ],
-    
-    "test_ports": [443, 2052, 2053, 2082, 2083, 2086, 2087, 2095, 2096, 8443, 8444],
-    "timeout": 10,
-    "api_timeout": 5,
-    "query_interval": 0.2,
-    "max_workers": 20,
-    "batch_size": 15,
-    "cache_ttl_hours": 168,
-    "advanced_mode": True,
-    "bandwidth_test_count": 3,
-    "bandwidth_test_size_mb": 10,
-    "latency_filter_percentage": 30,
-}
-
-# ===== 国家/地区映射表 =====
-COUNTRY_MAPPING = {
-    'US': '美国', 'CA': '加拿大', 'MX': '墨西哥', 'GB': '英国', 'UK': '英国',
-    'FR': '法国', 'DE': '德国', 'IT': '意大利', 'ES': '西班牙', 'NL': '荷兰',
-    'RU': '俄罗斯', 'SE': '瑞典', 'CH': '瑞士', 'BE': '比利时', 'AT': '奥地利',
-    'PL': '波兰', 'DK': '丹麦', 'NO': '挪威', 'FI': '芬兰', 'PT': '葡萄牙',
-    'IE': '爱尔兰', 'UA': '乌克兰', 'CZ': '捷克', 'GR': '希腊', 'HU': '匈牙利',
-    'RO': '罗马尼亚', 'TR': '土耳其', 'BG': '保加利亚', 'LT': '立陶宛', 'LV': '拉脱维亚',
-    'EE': '爱沙尼亚', 'BY': '白俄罗斯', 'LU': '卢森堡', 'SI': '斯洛文尼亚', 'SK': '斯洛伐克',
-    'MT': '马耳他', 'HR': '克罗地亚', 'RS': '塞尔维亚', 'BA': '波黑', 'ME': '黑山',
-    'MK': '北马其顿', 'AL': '阿尔巴尼亚', 'MD': '摩尔多瓦', 'GE': '格鲁吉亚',
-    'AM': '亚美尼亚', 'AZ': '阿塞拜疆', 'CY': '塞浦路斯',
-    'CN': '中国', 'HK': '中国香港', 'TW': '中国台湾', 'MO': '中国澳门',
-    'JP': '日本', 'KR': '韩国', 'SG': '新加坡', 'SGP': '新加坡',
-    'IN': '印度', 'ID': '印度尼西亚', 'MY': '马来西亚', 'MYS': '马来西亚',
-    'TH': '泰国', 'PH': '菲律宾', 'VN': '越南', 'PK': '巴基斯坦',
-    'BD': '孟加拉', 'KZ': '哈萨克斯坦', 'IL': '以色列', 'ISR': '以色列',
-    'SA': '沙特阿拉伯', 'SAU': '沙特阿拉伯', 'AE': '阿联酋',
-    'AU': '澳大利亚', 'NZ': '新西兰',
-    'ZA': '南非', 'EG': '埃及', 'NG': '尼日利亚', 'KE': '肯尼亚',
-    'BR': '巴西', 'AR': '阿根廷', 'CL': '智利', 'CO': '哥伦比亚',
-    'PE': '秘鲁', 'VE': '委内瑞拉', 'UY': '乌拉圭', 'PY': '巴拉圭',
-    'Unknown': '未知'
-}
-
-region_cache = {}
-
-session = requests.Session()
-session.headers.update({
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-    'Connection': 'keep-alive',
-})
-
-adapter = requests.adapters.HTTPAdapter(
-    pool_connections=10,
-    pool_maxsize=20,
-    max_retries=3
-)
-session.mount('http://', adapter)
-session.mount('https://', adapter)
-
-# ===== 缓存管理函数 =====
-def load_region_cache():
-    global region_cache
-    if os.path.exists('Cache.json'):
+# Base64解码（与原来相同）
+def decode_base64(encoded):
+    decoded = ""
+    for encoding in ["utf-8", "iso-8859-1"]:
         try:
-            with open('Cache.json', 'r', encoding='utf-8') as f:
-                region_cache = json.load(f)
-            logger.info(f"📦 加载缓存: {len(region_cache)} 个条目")
-        except:
-            region_cache = {}
-    else:
-        region_cache = {}
+            pad_encoded = encoded + b"=" * (-len(encoded) % 4)
+            decoded = pybase64.b64decode(pad_encoded).decode(encoding)
+            break
+        except (UnicodeDecodeError, binascii.Error, TypeError):
+            continue
+    return decoded
 
-def save_region_cache():
-    try:
-        with open('Cache.json', 'w', encoding='utf-8') as f:
-            json.dump(region_cache, f, ensure_ascii=False)
-        logger.info(f"💾 保存缓存: {len(region_cache)} 个条目")
-    except:
-        pass
-
-def is_cache_valid(timestamp, ttl_hours=24):
-    if not timestamp:
-        return False
-    try:
-        cache_time = datetime.fromisoformat(timestamp)
-        return datetime.now() - cache_time < timedelta(hours=ttl_hours)
-    except:
-        return False
-
-def clean_expired_cache():
-    global region_cache
-    current_time = datetime.now()
-    expired_keys = []
-    for ip, data in region_cache.items():
-        if isinstance(data, dict) and 'timestamp' in data:
-            try:
-                cache_time = datetime.fromisoformat(data['timestamp'])
-                if current_time - cache_time >= timedelta(hours=CONFIG["cache_ttl_hours"]):
-                    expired_keys.append(ip)
-            except:
-                pass
-    for key in expired_keys:
-        del region_cache[key]
-    if len(region_cache) > 1000:
-        sorted_items = sorted(region_cache.items(), 
-                            key=lambda x: x[1].get('timestamp', '') if isinstance(x[1], dict) else '')
-        items_to_remove = len(region_cache) - 1000
-        for i in range(items_to_remove):
-            del region_cache[sorted_items[i][0]]
-    if expired_keys:
-        logger.info(f"清理了 {len(expired_keys)} 个过期缓存")
-
-def delete_file_if_exists(file_path):
-    if os.path.exists(file_path):
+# 拉取base64订阅（不变）
+def decode_links(links):
+    decoded_data = []
+    headers = {"User-Agent": "Mozilla/5.0"}
+    for link in links:
         try:
-            os.remove(file_path)
-            logger.info(f"🗑️ 已删除: {file_path}")
-        except:
-            pass
+            resp = requests.get(link, timeout=TIMEOUT, headers=headers)
+            resp.raise_for_status()
+            decoded_text = decode_base64(resp.content)
+            if decoded_text:
+                decoded_data.append(decoded_text)
+        except requests.RequestException as e:
+            print(f"[跳过] 链接请求失败: {link}, 错误: {str(e)[:30]}")
+            continue
+    return decoded_data
 
-# ===== 网络测试函数 =====
-def test_ip_availability(ip):
-    """
-    TCP Socket检测IP可用性 - 支持多端口自定义
-    增加连接超时和重试机制
-    """
-    try:
-        parts = ip.split('.')
-        if len(parts) != 4 or not all(0 <= int(p) <= 255 for p in parts):
-            return (False, 0)
-    except:
-        return (False, 0)
-    
-    min_delay = float('inf')
-    success_count = 0
-    
-    for port in CONFIG["test_ports"]:
+# 拉取明文订阅（不变）
+def decode_dir_links(dir_links):
+    decoded_dir_links = []
+    headers = {"User-Agent": "Mozilla/5.0"}
+    for link in dir_links:
         try:
-            if not isinstance(port, int) or not (1 <= port <= 65535):
+            resp = requests.get(link, timeout=TIMEOUT, headers=headers)
+            resp.raise_for_status()
+            text = resp.text.strip()
+            if text:
+                decoded_dir_links.append(text)
+        except requests.RequestException as e:
+            print(f"[跳过] 明文链接失败: {link}, 错误: {str(e)[:30]}")
+            continue
+    return decoded_dir_links
+
+# 协议过滤+去重（不变）
+def filter_for_protocols(data, protocols):
+    filtered_data = []
+    seen_configs = set()
+    for content in data:
+        if not content or not content.strip():
+            continue
+        lines = content.strip().splitlines()
+        for line in lines:
+            line = line.strip()
+            if line.startswith("#") or not line:
+                filtered_data.append(line)
                 continue
-                
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(5)
-                start_time = time.time()
-                
-                if s.connect_ex((ip, port)) == 0:
-                    delay = round((time.time() - start_time) * 1000)
-                    min_delay = min(min_delay, delay)
-                    success_count += 1
-                    
-                    if delay < 300:
-                        return (True, delay)
-        except (socket.timeout, socket.error, OSError):
-            continue
-        except Exception:
-            continue
-    
-    if success_count > 0:
-        return (True, min_delay)
-    
-    return (False, 0)
+            if any(pro in line for pro in protocols):
+                if line not in seen_configs:
+                    filtered_data.append(line)
+                    seen_configs.add(line)
+    return filtered_data
 
-def test_ips_concurrently(ips, max_workers=None):
-    if max_workers is None:
-        max_workers = CONFIG["max_workers"]
-    
-    logger.info(f"📡 并发检测 {len(ips)} 个IP")
-    available_ips = []
-    batch_size = CONFIG["batch_size"]
-    
-    for i in range(0, len(ips), batch_size):
-        batch_ips = ips[i:i+batch_size]
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_ip = {executor.submit(test_ip_availability, ip): ip for ip in batch_ips}
-            for future in as_completed(future_to_ip, timeout=30):
-                ip = future_to_ip[future]
-                try:
-                    is_available, delay = future.result()
-                    if is_available:
-                        available_ips.append((ip, delay))
-                except:
-                    continue
-    return available_ips
+# 创建目录（不变）
+def ensure_directories_exist():
+    os.makedirs(OUTPUT_ROOT, exist_ok=True)
+    os.makedirs(BASE64_SUB_FOLDER, exist_ok=True)
+    return OUTPUT_ROOT, BASE64_SUB_FOLDER
 
-# ===== 地区识别函数 =====
-def get_ip_region(ip):
-    if ip in region_cache:
-        cached_data = region_cache[ip]
-        if isinstance(cached_data, dict) and 'timestamp' in cached_data:
-            if is_cache_valid(cached_data['timestamp'], CONFIG["cache_ttl_hours"]):
-                return cached_data['region']
-        else:
-            return cached_data
-    
-    try:
-        resp = session.get(f'https://api.ipinfo.io/lite/{ip}?token=2cb674df499388', timeout=CONFIG["api_timeout"])
-        if resp.status_code == 200:
-            data = resp.json()
-            country_code = data.get('country_code', '').upper()
-            if country_code:
-                region_cache[ip] = {'region': country_code, 'timestamp': datetime.now().isoformat()}
-                return country_code
-    except:
-        pass
-    
-    try:
-        resp = session.get(f'http://ip-api.com/json/{ip}?fields=countryCode', timeout=CONFIG["api_timeout"])
-        if resp.json().get('status') == 'success':
-            country_code = resp.json().get('countryCode', '').upper()
-            if country_code:
-                region_cache[ip] = {'region': country_code, 'timestamp': datetime.now().isoformat()}
-                return country_code
-    except:
-        pass
-    
-    region_cache[ip] = {'region': 'Unknown', 'timestamp': datetime.now().isoformat()}
-    return 'Unknown'
-
-def get_country_name(code):
-    return COUNTRY_MAPPING.get(code, code)
-
-def format_ip_line(ip, port=443, country_code='Unknown'):
-    """统一格式化输出: IP:端口#国家-☆灵鹿优选☆"""
-    return f"{ip}:{port}#{country_code}-☆灵鹿优选☆"
-
-# ===== 主程序 =====
 def main():
-    start_time = time.time()
-    
-    delete_file_if_exists('linglu-01.txt')
-    delete_file_if_exists('linglu-02.txt')
-    delete_file_if_exists('linglu-03.txt')
-    delete_file_if_exists('linglu-04.txt')
-    delete_file_if_exists('linglu-05.txt')
-    
-    logger.info("📥 开始采集IP地址...")
-    all_ips = []
-    successful_sources = 0
-    
-    for url in CONFIG["ip_sources"]:
-        try:
-            logger.info(f"🔍 从 {url} 采集...")
-            time.sleep(CONFIG["query_interval"])
-            
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-            resp = session.get(url, timeout=CONFIG["timeout"], headers=headers)
-            
-            if resp.status_code == 200:
-                ips = re.findall(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', resp.text)
-                valid_ips = [ip for ip in ips if all(0 <= int(p) <= 255 for p in ip.split('.'))]
-                
-                if valid_ips:
-                    all_ips.extend(valid_ips)
-                    successful_sources += 1
-                    logger.info(f"✅ 从 {url} 采集 {len(valid_ips)} 个IP")
-                else:
-                    logger.warning(f"⚠️ {url} 未找到有效IP")
-            else:
-                logger.warning(f"⚠️ {url} 返回状态码: {resp.status_code}")
-        except Exception as e:
-            logger.error(f"❌ {url} 采集失败: {str(e)[:50]}")
-    
-    logger.info(f"📊 采集统计: 成功 {successful_sources} 个源，总计 {len(all_ips)} 个IP")
-    
-    unique_ips = sorted(list(set(all_ips)), key=lambda x: [int(p) for p in x.split('.')])
-    logger.info(f"🔢 去重后 {len(unique_ips)} 个IP")
-    
-    if not unique_ips:
-        logger.error("⚠️ 无IP地址，程序结束")
-        return
-    
-    logger.info("🔍 快速筛选可用IP...")
-    filtered_ips = []
-    total = len(unique_ips)
-    
-    for i, ip in enumerate(unique_ips, 1):
-        if i % 10 == 0:
-            logger.info(f"📊 筛选进度: {i}/{total}")
-        is_good, delay = test_ip_availability(ip)
-        if is_good:
-            filtered_ips.append(ip)
-            logger.info(f"✅ 可用IP: {ip} (延迟: {delay}ms)")
-    
-    logger.info(f"🔍 快速筛选完成，保留 {len(filtered_ips)} 个可用IP")
-    
-    if not filtered_ips:
-        logger.warning("⚠️ 无可用IP，程序结束")
-        return
-    
-    logger.info("🌍 开始地区识别...")
-    region_results = []
-    for ip in filtered_ips:
-        region_code = get_ip_region(ip)
-        region_results.append((ip, region_code, 0, 0))
-    
-    logger.info("📄 生成基础文件...")
-    
-    # linglu-04.txt (纯IP)
-    with open('linglu-04.txt', 'w', encoding='utf-8') as f:
-        for ip in filtered_ips:
-            f.write(f"{ip}\n")
-    
-    # linglu-01.txt (统一格式: IP:443#国家-☆灵鹿优选☆)
-    with open('linglu-01.txt', 'w', encoding='utf-8') as f:
-        for ip, region_code, _, _ in region_results:
-            f.write(format_ip_line(ip, 443, region_code) + "\n")
-    
-    logger.info(f"📄 保存 {len(filtered_ips)} 个IP到 linglu-04.txt")
-    logger.info(f"📄 保存 {len(region_results)} 条记录到 linglu-01.txt")
-    
-    if CONFIG["advanced_mode"]:
-        logger.info("🔍 TCP Ping测试（深度检测）...")
-        tcp_results = test_ips_concurrently(filtered_ips)
-        logger.info(f"📡 TCP测试完成，可用 {len(tcp_results)} 个IP")
-        
-        if tcp_results:
-            logger.info("📄 生成高级文件...")
-            pro_region_results = []
-            for ip, delay in tcp_results:
-                region_code = get_ip_region(ip)
-                pro_region_results.append((ip, region_code, delay))
-            
-            # linglu-05.txt (纯IP)
-            with open('linglu-05.txt', 'w', encoding='utf-8') as f:
-                for ip, _, _ in pro_region_results:
-                    f.write(f"{ip}\n")
-            
-            # linglu-02.txt (统一格式: IP:443#国家-☆灵鹿优选☆)
-            with open('linglu-02.txt', 'w', encoding='utf-8') as f:
-                for ip, region_code, delay in pro_region_results:
-                    f.write(format_ip_line(ip, 443, region_code) + "\n")
-            
-            # linglu-03.txt (按延迟排序，无编号)
-            sorted_results = sorted(pro_region_results, key=lambda x: x[2])
-            with open('linglu-03.txt', 'w', encoding='utf-8') as f:
-                for ip, region_code, delay in sorted_results:
-                    f.write(f"{format_ip_line(ip, 443, region_code)} (延迟: {delay}ms)\n")
-            
-            logger.info(f"📄 保存 {len(pro_region_results)} 个优选IP")
-    
-    save_region_cache()
-    logger.info(f"⏱️ 总耗时: {round(time.time() - start_time, 2)}秒")
-    logger.info("🏁 程序完成")
+    print("===== GitHub Actions 订阅合并任务启动 =====")
+    output_folder, base64_folder = ensure_directories_exist()
 
-# ===== 程序入口 =====
+    # 清理旧文件
+    print("\n[1/6] 清理历史旧文件")
+    main_txt = os.path.join(output_folder, "All_Configs_Sub.txt")
+    main_b64 = os.path.join(output_folder, "All_Configs_base64_Sub.txt")
+    for old_file in [main_txt, main_b64]:
+        if os.path.exists(old_file):
+            os.remove(old_file)
+    for i in range(1, 21):
+        sub_file = os.path.join(output_folder, f"Sub{i}.txt")
+        b64_sub = os.path.join(base64_folder, f"Sub{i}_base64.txt")
+        for fpath in [sub_file, b64_sub]:
+            if os.path.exists(fpath):
+                os.remove(fpath)
+
+    # 订阅源列表（不变）
+    protocols = ["vmess", "vless", "trojan", "ss", "ssr", "hy2", "tuic", "warp://"]
+    links = [
+        "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/app/sub.txt",
+        "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/mtn/sub_1.txt",
+        "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/mtn/sub_2.txt",
+        "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/mtn/sub_3.txt",
+        "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/mtn/sub_4.txt",
+        "https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/splitted/mixed"
+    ]
+    dir_links = [
+        "https://raw.githubusercontent.com/itsyebekhe/PSG/main/lite/subscriptions/xray/normal/mix",
+        "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html",
+        "https://raw.githubusercontent.com/Rayan-Config/C-Sub/refs/heads/main/configs/proxy.txt",
+        "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
+        "https://raw.githubusercontent.com/Everyday-VPN/Everyday-VPN/main/subscription/main.txt",
+        "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
+    ]
+
+    # 拉取解析
+    print("\n[2/6] 拉取并解析Base64订阅源")
+    decoded_links = decode_links(links)
+    print(f"成功解析源数量：{len(decoded_links)}")
+    print("\n[3/6] 拉取并解析明文订阅源")
+    decoded_dir_links = decode_dir_links(dir_links)
+    print(f"成功解析源数量：{len(decoded_dir_links)}")
+
+    # 合并过滤
+    print("\n[4/6] 合并协议并去重")
+    combined = decoded_links + decoded_dir_links
+    merged_configs = filter_for_protocols(combined, protocols)
+    print(f"最终有效节点总数：{len(merged_configs)}")
+
+    # ========== 生成汇总文件（标题强制加前缀） ==========
+    print("\n[5/6] 生成汇总订阅文件")
+    # 汇总标题
+    main_title = TITLE_PREFIX + "GitHub | Barry-far"
+    b64_main_title = base64.b64encode(main_title.encode()).decode()
+    fixed_text = f"""#profile-title: base64:{b64_main_title}
+#profile-update-interval: 1
+#subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
+#support-url: https://github.com/barry-far/V2ray-config
+#profile-web-page-url: https://github.com/barry-far/V2ray-config
+"""
+    with open(main_txt, "w", encoding="utf-8") as f:
+        f.write(fixed_text)
+        for cfg in merged_configs:
+            f.write(cfg + "\n")
+
+    # Base64 汇总
+    with open(main_txt, "r", encoding="utf-8") as f:
+        raw_data = f.read()
+    b64_encode_data = base64.b64encode(raw_data.encode("utf-8")).decode()
+    with open(main_b64, "w", encoding="utf-8") as f:
+        f.write(b64_encode_data)
+
+    # ========== 分片拆分（标题强制加前缀） ==========
+    print("\n[6/6] 拆分多分片订阅文件")
+    with open(main_txt, "r", encoding="utf-8") as f:
+        all_lines = f.readlines()
+    total_lines = len(all_lines)
+    max_per_file = 500
+    file_count = (total_lines + max_per_file - 1) // max_per_file
+    print(f"共计拆分 {file_count} 个分片文件")
+
+    for idx in range(file_count):
+        file_num = idx + 1
+        # 分片标题：前缀 + 原有内容
+        split_title = TITLE_PREFIX + f"🆓 Git:barry-far | Sub{file_num} 🔥"
+        b64_split_title = base64.b64encode(split_title.encode()).decode()
+        split_header = f"""#profile-title: base64:{b64_split_title}
+#profile-update-interval: 1
+#subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
+#support-url: https://github.com/barry-far/V2ray-config
+#profile-web-page-url: https://github.com/barry-far/V2ray-config
+"""
+        split_txt_path = os.path.join(output_folder, f"Sub{file_num}.txt")
+        start = idx * max_per_file
+        end = start + max_per_file
+        slice_lines = all_lines[start:end]
+        with open(split_txt_path, "w", encoding="utf-8") as f:
+            f.write(split_header)
+            f.writelines(slice_lines)
+
+        # 分片 Base64
+        with open(split_txt_path, "r", encoding="utf-8") as f:
+            slice_raw = f.read()
+        slice_b64 = base64.b64encode(slice_raw.encode()).decode()
+        split_b64_path = os.path.join(base64_folder, f"Sub{file_num}_base64.txt")
+        with open(split_b64_path, "w", encoding="utf-8") as f:
+            f.write(slice_b64)
+        print(f"✅ 完成分片：Sub{file_num}.txt")
+
+    print("\n==================== 任务全部完成 ====================")
+    print(f"输出目录：{os.path.abspath(OUTPUT_ROOT)}")
+    print(f"有效节点数：{len(merged_configs)}")
+    print("汇总文件、分片文件、Base64文件已全部生成（标题均含 ☆灵鹿收集☆）")
+
 if __name__ == "__main__":
-    load_region_cache()
-    clean_expired_cache()
-    try:
-        main()
-    except KeyboardInterrupt:
-        logger.info("⏹️ 程序被中断")
-    except Exception as e:
-        logger.error(f"❌ 程序出错: {str(e)}")
-        import traceback
-        logger.error(traceback.format_exc())
+    main()
