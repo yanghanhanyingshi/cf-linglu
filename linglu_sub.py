@@ -4,12 +4,18 @@ import requests
 import binascii
 import os
 import sys
-import traceback
 
+# ===================== 全局配置 =====================
 TIMEOUT = 15
 OUTPUT_ROOT = "output"
 BASE64_SUB_FOLDER = os.path.join(OUTPUT_ROOT, "Base64")
-TITLE_PREFIX = "☆灵鹿收集☆ "
+
+fixed_text = """#profile-title: base64:8J+GkyBHaXRodWIgfCBCYXJyeS1mYXIg8J+ltw==
+#profile-update-interval: 1
+#subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
+#support-url: https://github.com/barry-far/V2ray-config
+#profile-web-page-url: https://github.com/barry-far/V2ray-config
+"""
 
 def decode_base64(encoded):
     decoded = ""
@@ -79,13 +85,15 @@ def main():
     print("===== GitHub Actions 订阅合并任务启动 =====")
     output_folder, base64_folder = ensure_directories_exist()
 
-    # 清理旧文件
-    print("\n[1/6] 清理历史旧文件")
+    # 清理旧文件（强制覆盖）
+    print("\n[1/6] 清理历史旧文件（强制覆盖）")
     main_txt = os.path.join(output_folder, "All_Configs_Sub.txt")
     main_b64 = os.path.join(output_folder, "All_Configs_base64_Sub.txt")
+
     for old_file in [main_txt, main_b64]:
         if os.path.exists(old_file):
             os.remove(old_file)
+
     for i in range(1, 21):
         sub_file = os.path.join(output_folder, f"Sub{i}.txt")
         b64_sub = os.path.join(base64_folder, f"Sub{i}_base64.txt")
@@ -114,6 +122,7 @@ def main():
     print("\n[2/6] 拉取并解析Base64订阅源")
     decoded_links = decode_links(links)
     print(f"成功解析源数量：{len(decoded_links)}")
+
     print("\n[3/6] 拉取并解析明文订阅源")
     decoded_dir_links = decode_dir_links(dir_links)
     print(f"成功解析源数量：{len(decoded_dir_links)}")
@@ -123,19 +132,7 @@ def main():
     merged_configs = filter_for_protocols(combined, protocols)
     print(f"最终有效节点总数：{len(merged_configs)}")
 
-    # 如果没有任何节点，也生成空文件（避免缺失）
-    if not merged_configs:
-        print("[警告] 未获取到任何有效节点，将生成空白订阅文件")
-
     print("\n[5/6] 生成汇总订阅文件")
-    main_title = TITLE_PREFIX + "GitHub | Barry-far"
-    b64_main_title = base64.b64encode(main_title.encode("utf-8")).decode()
-    fixed_text = f"""#profile-title: base64:{b64_main_title}
-#profile-update-interval: 1
-#subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
-#support-url: https://github.com/barry-far/V2ray-config
-#profile-web-page-url: https://github.com/barry-far/V2ray-config
-"""
     with open(main_txt, "w", encoding="utf-8") as f:
         f.write(fixed_text)
         for cfg in merged_configs:
@@ -157,9 +154,9 @@ def main():
 
     for idx in range(file_count):
         file_num = idx + 1
-        split_title = TITLE_PREFIX + f"🆓 Git:barry-far | Sub{file_num} 🔥"
-        b64_split_title = base64.b64encode(split_title.encode("utf-8")).decode()
-        split_header = f"""#profile-title: base64:{b64_split_title}
+        title = f"🆓 Git:barry-far | Sub{file_num} 🔥"
+        b64_title = base64.b64encode(title.encode()).decode()
+        split_header = f"""#profile-title: base64:{b64_title}
 #profile-update-interval: 1
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
@@ -175,7 +172,7 @@ def main():
 
         with open(split_txt_path, "r", encoding="utf-8") as f:
             slice_raw = f.read()
-        slice_b64 = base64.b64encode(slice_raw.encode("utf-8")).decode()
+        slice_b64 = base64.b64encode(slice_raw.encode()).decode()
         split_b64_path = os.path.join(base64_folder, f"Sub{file_num}_base64.txt")
         with open(split_b64_path, "w", encoding="utf-8") as f:
             f.write(slice_b64)
@@ -184,15 +181,6 @@ def main():
     print("\n==================== 任务全部完成 ====================")
     print(f"输出目录：{os.path.abspath(OUTPUT_ROOT)}")
     print(f"有效节点数：{len(merged_configs)}")
-    print("所有文件标题已强制添加 '☆灵鹿收集☆' 前缀")
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(f"\n❌ 脚本执行出错: {e}")
-        traceback.print_exc()
-        # 生成错误标记文件，便于排查
-        with open(os.path.join(OUTPUT_ROOT, "ERROR.txt"), "w") as f:
-            f.write(f"Error: {e}\n\n{traceback.format_exc()}")
-        sys.exit(1)
+    main()
