@@ -3,8 +3,8 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '*/30 * * * *'  # 每30分钟自动运行一次
-  workflow_dispatch: # 支持手动点击运行
+    - cron: '0 */8 * * *'   # 每8小时
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -23,7 +23,7 @@ jobs:
           pip install requests pybase64 --upgrade
 
       - name: 执行订阅合并脚本
-        run: python linglu_sub.py   # ← 脚本名已改
+        run: python linglu_sub.py
 
       - name: 上传生成文件产物
         uses: actions/upload-artifact@v4
@@ -31,10 +31,10 @@ jobs:
           name: proxy-config-files
           path: output/
 
-      - name: 提交更新文件到仓库
+      - name: 提交并强制推送更新到仓库
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add output/
-          git commit -m "Auto update proxy config files" || echo "无文件更新跳过提交"
-          git push
+          git commit -m "Auto update proxy config files" || echo "无文件更新，跳过提交"
+          git push --force origin HEAD:main   # 强制覆盖远程 main 分支
