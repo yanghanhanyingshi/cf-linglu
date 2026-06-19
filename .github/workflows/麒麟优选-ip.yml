@@ -29,9 +29,9 @@ jobs:
           playwright install-deps chromium
 
       - name: 麒麟IP优选采集（去重+格式化）
-        run: python qilin.py   # 直接在根目录运行
+        run: python qilin.py
 
-      - name: 生成TOP文件并自动提交更新
+      - name: 提交更新
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
@@ -39,31 +39,13 @@ jobs:
           BEIJING_TIME=$(TZ=Asia/Shanghai date "+%m-%d %H:%M")
           echo "⏰ 当前北京时间：$BEIJING_TIME"
 
-          # 所有文件在根目录，不再 cd
           git add qilin_ip.txt
 
           if git diff --cached --quiet qilin_ip.txt; then
             echo "✅ IP无变化，无需更新"
           else
-            echo "🔄 检测到优质IP更新，生成麒麟TOP文件..."
-
-            # 生成麒麟TOP格式文件（内容已自带端口和后缀，无需再 sed 处理）
-            generate_qilin() {
-              local count=$1
-              local file="qilin${count}_ip.txt"
-              echo "saas.sin.fan:443#▼ 麒麟优选IP TOP${count} | ${BEIJING_TIME} | 灵鹿优选" > "$file"
-              head -n $count qilin_ip.txt >> "$file"
-              echo "bestcf.030101.xyz:443#▲ 麒麟优选IP | 灵鹿优选 | 自动采集" >> "$file"
-              echo "✅ 生成：$file"
-            }
-
-            generate_qilin 100
-            generate_qilin 50
-            generate_qilin 20
-            generate_qilin 10
-
-            git add *.txt
             git commit -m "麒麟优选IP ${BEIJING_TIME}"
             git pull --rebase origin main
             git push origin main
+            echo "✅ 提交成功"
           fi
