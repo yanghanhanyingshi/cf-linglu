@@ -4,12 +4,11 @@ import requests
 import binascii
 import os
 import sys
+import traceback
 
 TIMEOUT = 15
 OUTPUT_ROOT = "output"
 BASE64_SUB_FOLDER = os.path.join(OUTPUT_ROOT, "Base64")
-
-# ====== 强制前缀 ======
 TITLE_PREFIX = "☆灵鹿收集☆ "
 
 def decode_base64(encoded):
@@ -94,7 +93,6 @@ def main():
             if os.path.exists(fpath):
                 os.remove(fpath)
 
-    # 订阅源（保持不变）
     protocols = ["vmess", "vless", "trojan", "ss", "ssr", "hy2", "tuic", "warp://"]
     links = [
         "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/app/sub.txt",
@@ -125,11 +123,13 @@ def main():
     merged_configs = filter_for_protocols(combined, protocols)
     print(f"最终有效节点总数：{len(merged_configs)}")
 
-    # ====== 生成汇总文件（标题强制加前缀） ======
+    # 如果没有任何节点，也生成空文件（避免缺失）
+    if not merged_configs:
+        print("[警告] 未获取到任何有效节点，将生成空白订阅文件")
+
     print("\n[5/6] 生成汇总订阅文件")
     main_title = TITLE_PREFIX + "GitHub | Barry-far"
     b64_main_title = base64.b64encode(main_title.encode("utf-8")).decode()
-    print(f"[汇总标题] {main_title} -> Base64: {b64_main_title}")  # 调试输出
     fixed_text = f"""#profile-title: base64:{b64_main_title}
 #profile-update-interval: 1
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
@@ -141,14 +141,12 @@ def main():
         for cfg in merged_configs:
             f.write(cfg + "\n")
 
-    # 汇总 Base64
     with open(main_txt, "r", encoding="utf-8") as f:
         raw_data = f.read()
     b64_encode_data = base64.b64encode(raw_data.encode("utf-8")).decode()
     with open(main_b64, "w", encoding="utf-8") as f:
         f.write(b64_encode_data)
 
-    # ====== 分片拆分（标题强制加前缀） ======
     print("\n[6/6] 拆分多分片订阅文件")
     with open(main_txt, "r", encoding="utf-8") as f:
         all_lines = f.readlines()
@@ -161,7 +159,6 @@ def main():
         file_num = idx + 1
         split_title = TITLE_PREFIX + f"🆓 Git:barry-far | Sub{file_num} 🔥"
         b64_split_title = base64.b64encode(split_title.encode("utf-8")).decode()
-        print(f"[分片{file_num}标题] {split_title} -> Base64: {b64_split_title}")  # 调试
         split_header = f"""#profile-title: base64:{b64_split_title}
 #profile-update-interval: 1
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
@@ -176,7 +173,6 @@ def main():
             f.write(split_header)
             f.writelines(slice_lines)
 
-        # 分片 Base64
         with open(split_txt_path, "r", encoding="utf-8") as f:
             slice_raw = f.read()
         slice_b64 = base64.b64encode(slice_raw.encode("utf-8")).decode()
@@ -191,4 +187,12 @@ def main():
     print("所有文件标题已强制添加 '☆灵鹿收集☆' 前缀")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"\n❌ 脚本执行出错: {e}")
+        traceback.print_exc()
+        # 生成错误标记文件，便于排查
+        with open(os.path.join(OUTPUT_ROOT, "ERROR.txt"), "w") as f:
+            f.write(f"Error: {e}\n\n{traceback.format_exc()}")
+        sys.exit(1)
