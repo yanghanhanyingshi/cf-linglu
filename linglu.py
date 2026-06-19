@@ -38,7 +38,7 @@ CONFIG = {
         'https://cf.090227.xyz/ct',
         'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt',
         'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-        'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/addressesapi.txt,
+        'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/addressesapi.txt',
     ],
     
     "test_ports": [443, 2052, 2053, 2082, 2083, 2086, 2087, 2095, 2096, 8443, 8444],
