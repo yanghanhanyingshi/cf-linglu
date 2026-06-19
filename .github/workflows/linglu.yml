@@ -1,67 +1,21 @@
-name: 灵鹿IP 爬取
-
-on:
-  schedule:
-    - cron: '0 */3 * * *'
-  workflow_dispatch:
-
-jobs:
-  collect-ips:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
+- name: Commit results
+  run: |
+    git config --local user.email "action@github.com"
+    git config --local user.name "GitHub Action"
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0  # 重要：拉取完整历史，便于 pull rebase
-      
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests urllib3
-        
-    - name: Run IP Test
-      run: |
-        python linglu.py
-        
-    - name: Upload results
-      uses: actions/upload-artifact@v4
-      with:
-        name: ip-results
-        path: |
-          linglu-01.txt
-          linglu-02.txt
-          linglu-03.txt
-          linglu-04.txt
-          linglu-05.txt
-          linglu.log
-          Cache.json
-          
-    - name: Commit results
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        
-        # 先拉取远程最新代码（rebase方式）
-        git pull --rebase origin main
-        
-        # 添加需要提交的文件
-        git add linglu-01.txt linglu-02.txt linglu-03.txt linglu-04.txt linglu-05.txt Cache.json
-        
-        # 检查是否有变化，有则提交
-        if git diff --staged --quiet; then
-          echo "✅ 没有变化，跳过提交"
-        else
-          git commit -m "Update IP results - $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
-          git push origin main
-          echo "✅ 提交成功"
-        fi
+    git pull --rebase origin main
+    
+    # 只添加确实存在的文件（防止 git add 报错）
+    for file in linglu-01.txt linglu-02.txt linglu-03.txt linglu-04.txt linglu-05.txt Cache.json; do
+      if [ -f "$file" ]; then
+        git add "$file"
+      fi
+    done
+    
+    if git diff --staged --quiet; then
+      echo "✅ 没有变化，跳过提交"
+    else
+      git commit -m "Update IP results - $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+      git push origin main
+      echo "✅ 提交成功"
+    fi
