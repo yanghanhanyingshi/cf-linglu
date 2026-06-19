@@ -12,7 +12,6 @@ from urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
-# 修改日志文件名为 linglu.log
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -48,7 +47,100 @@ CONFIG = {
     "latency_filter_percentage": 30,
 }
 
-# ... (COUNTRY_MAPPING, region_cache, session, adapter 等保持不变) ...
+COUNTRY_MAPPING = {
+    'US': '美国', 'CA': '加拿大', 'MX': '墨西哥', 'GB': '英国', 'UK': '英国',
+    'FR': '法国', 'DE': '德国', 'IT': '意大利', 'ES': '西班牙', 'NL': '荷兰',
+    'RU': '俄罗斯', 'SE': '瑞典', 'CH': '瑞士', 'BE': '比利时', 'AT': '奥地利',
+    'PL': '波兰', 'DK': '丹麦', 'NO': '挪威', 'FI': '芬兰', 'PT': '葡萄牙',
+    'IE': '爱尔兰', 'UA': '乌克兰', 'CZ': '捷克', 'GR': '希腊', 'HU': '匈牙利',
+    'RO': '罗马尼亚', 'TR': '土耳其', 'BG': '保加利亚', 'LT': '立陶宛', 'LV': '拉脱维亚',
+    'EE': '爱沙尼亚', 'BY': '白俄罗斯', 'LU': '卢森堡', 'SI': '斯洛文尼亚', 'SK': '斯洛伐克',
+    'MT': '马耳他', 'HR': '克罗地亚', 'RS': '塞尔维亚', 'BA': '波黑', 'ME': '黑山',
+    'MK': '北马其顿', 'AL': '阿尔巴尼亚', 'MD': '摩尔多瓦', 'GE': '格鲁吉亚',
+    'AM': '亚美尼亚', 'AZ': '阿塞拜疆', 'CY': '塞浦路斯',
+    'CN': '中国', 'HK': '中国香港', 'TW': '中国台湾', 'MO': '中国澳门',
+    'JP': '日本', 'KR': '韩国', 'SG': '新加坡', 'SGP': '新加坡',
+    'IN': '印度', 'ID': '印度尼西亚', 'MY': '马来西亚', 'MYS': '马来西亚',
+    'TH': '泰国', 'PH': '菲律宾', 'VN': '越南', 'PK': '巴基斯坦',
+    'BD': '孟加拉', 'KZ': '哈萨克斯坦', 'IL': '以色列', 'ISR': '以色列',
+    'SA': '沙特阿拉伯', 'SAU': '沙特阿拉伯', 'AE': '阿联酋',
+    'AU': '澳大利亚', 'NZ': '新西兰',
+    'ZA': '南非', 'EG': '埃及', 'NG': '尼日利亚', 'KE': '肯尼亚',
+    'BR': '巴西', 'AR': '阿根廷', 'CL': '智利', 'CO': '哥伦比亚',
+    'PE': '秘鲁', 'VE': '委内瑞拉', 'UY': '乌拉圭', 'PY': '巴拉圭',
+    'Unknown': '未知'
+}
+
+region_cache = {}
+
+session = requests.Session()
+session.headers.update({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Connection': 'keep-alive',
+})
+
+adapter = requests.adapters.HTTPAdapter(
+    pool_connections=10,
+    pool_maxsize=20,
+    max_retries=3
+)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
+
+# ===== 缓存管理函数 =====
+def load_region_cache():
+    global region_cache
+    if os.path.exists('Cache.json'):
+        try:
+            with open('Cache.json', 'r', encoding='utf-8') as f:
+                region_cache = json.load(f)
+            logger.info(f"📦 加载缓存: {len(region_cache)} 个条目")
+        except:
+            region_cache = {}
+    else:
+        region_cache = {}
+
+def save_region_cache():
+    try:
+        with open('Cache.json', 'w', encoding='utf-8') as f:
+            json.dump(region_cache, f, ensure_ascii=False)
+        logger.info(f"💾 保存缓存: {len(region_cache)} 个条目")
+    except:
+        pass
+
+def is_cache_valid(timestamp, ttl_hours=24):
+    if not timestamp:
+        return False
+    try:
+        cache_time = datetime.fromisoformat(timestamp)
+        return datetime.now() - cache_time < timedelta(hours=ttl_hours)
+    except:
+        return False
+
+def clean_expired_cache():
+    global region_cache
+    current_time = datetime.now()
+    expired_keys = []
+    for ip, data in region_cache.items():
+        if isinstance(data, dict) and 'timestamp' in data:
+            try:
+                cache_time = datetime.fromisoformat(data['timestamp'])
+                if current_time - cache_time >= timedelta(hours=CONFIG["cache_ttl_hours"]):
+                    expired_keys.append(ip)
+            except:
+                pass
+    for key in expired_keys:
+        del region_cache[key]
+    if len(region_cache) > 1000:
+        sorted_items = sorted(region_cache.items(), 
+                            key=lambda x: x[1].get('timestamp', '') if isinstance(x[1], dict) else '')
+        items_to_remove = len(region_cache) - 1000
+        for i in range(items_to_remove):
+            del region_cache[sorted_items[i][0]]
+    if expired_keys:
+        logger.info(f"清理了 {len(expired_keys)} 个过期缓存")
 
 def delete_file_if_exists(file_path):
     if os.path.exists(file_path):
@@ -58,12 +150,99 @@ def delete_file_if_exists(file_path):
         except:
             pass
 
-# ... (test_ip_availability, get_ip_region, get_country_name, test_ips_concurrently, format_ip_line 等函数保持不变) ...
+# ===== 网络测试函数 =====
+def test_ip_availability(ip):
+    try:
+        parts = ip.split('.')
+        if len(parts) != 4 or not all(0 <= int(p) <= 255 for p in parts):
+            return (False, 0)
+    except:
+        return (False, 0)
+    
+    min_delay = float('inf')
+    for port in CONFIG["test_ports"]:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(3)
+                start_time = time.time()
+                if s.connect_ex((ip, port)) == 0:
+                    delay = round((time.time() - start_time) * 1000)
+                    min_delay = min(min_delay, delay)
+                    if delay < 200:
+                        return (True, delay)
+        except:
+            continue
+    if min_delay != float('inf'):
+        return (True, min_delay)
+    return (False, 0)
 
+def test_ips_concurrently(ips, max_workers=None):
+    if max_workers is None:
+        max_workers = CONFIG["max_workers"]
+    
+    logger.info(f"📡 并发检测 {len(ips)} 个IP")
+    available_ips = []
+    batch_size = CONFIG["batch_size"]
+    
+    for i in range(0, len(ips), batch_size):
+        batch_ips = ips[i:i+batch_size]
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_ip = {executor.submit(test_ip_availability, ip): ip for ip in batch_ips}
+            for future in as_completed(future_to_ip, timeout=30):
+                ip = future_to_ip[future]
+                try:
+                    is_available, delay = future.result()
+                    if is_available:
+                        available_ips.append((ip, delay))
+                except:
+                    continue
+    return available_ips
+
+# ===== 地区识别函数 =====
+def get_ip_region(ip):
+    if ip in region_cache:
+        cached_data = region_cache[ip]
+        if isinstance(cached_data, dict) and 'timestamp' in cached_data:
+            if is_cache_valid(cached_data['timestamp'], CONFIG["cache_ttl_hours"]):
+                return cached_data['region']
+        else:
+            return cached_data
+    
+    try:
+        resp = session.get(f'https://api.ipinfo.io/lite/{ip}?token=2cb674df499388', timeout=CONFIG["api_timeout"])
+        if resp.status_code == 200:
+            data = resp.json()
+            country_code = data.get('country_code', '').upper()
+            if country_code:
+                region_cache[ip] = {'region': country_code, 'timestamp': datetime.now().isoformat()}
+                return country_code
+    except:
+        pass
+    
+    try:
+        resp = session.get(f'http://ip-api.com/json/{ip}?fields=countryCode', timeout=CONFIG["api_timeout"])
+        if resp.json().get('status') == 'success':
+            country_code = resp.json().get('countryCode', '').upper()
+            if country_code:
+                region_cache[ip] = {'region': country_code, 'timestamp': datetime.now().isoformat()}
+                return country_code
+    except:
+        pass
+    
+    region_cache[ip] = {'region': 'Unknown', 'timestamp': datetime.now().isoformat()}
+    return 'Unknown'
+
+def get_country_name(code):
+    return COUNTRY_MAPPING.get(code, code)
+
+def format_ip_line(ip, port=443, country_code='Unknown'):
+    """统一格式化输出: IP:端口#国家-☆灵鹿优选☆"""
+    return f"{ip}:{port}#{country_code}-☆灵鹿优选☆"
+
+# ===== 主程序 =====
 def main():
     start_time = time.time()
     
-    # 删除旧文件 - 使用新文件名
     delete_file_if_exists('linglu-01.txt')
     delete_file_if_exists('linglu-02.txt')
     delete_file_if_exists('linglu-03.txt')
@@ -106,20 +285,19 @@ def main():
         return
     
     logger.info("🌍 地区识别...")
-    ip_delay_data = [(ip, 0, 0) for ip in filtered_ips]
     region_results = []
-    for ip, _, _ in ip_delay_data:
+    for ip in filtered_ips:
         region_code = get_ip_region(ip)
         region_results.append((ip, region_code, 0, 0))
     
     logger.info("📄 生成基础文件...")
     
-    # linglu-04.txt (原IPlist.txt - 纯IP)
+    # linglu-04.txt (纯IP)
     with open('linglu-04.txt', 'w', encoding='utf-8') as f:
         for ip in filtered_ips:
             f.write(f"{ip}\n")
     
-    # linglu-01.txt (原Senflare.txt - 统一格式: IP:443#国家-☆灵鹿优选☆)
+    # linglu-01.txt (统一格式: IP:443#国家-☆灵鹿优选☆)
     with open('linglu-01.txt', 'w', encoding='utf-8') as f:
         for ip, region_code, _, _ in region_results:
             f.write(format_ip_line(ip, 443, region_code) + "\n")
@@ -139,17 +317,17 @@ def main():
                 region_code = get_ip_region(ip)
                 pro_region_results.append((ip, region_code, delay))
             
-            # linglu-05.txt (原IPlist-Pro.txt - 纯IP)
+            # linglu-05.txt (纯IP)
             with open('linglu-05.txt', 'w', encoding='utf-8') as f:
                 for ip, _, _ in pro_region_results:
                     f.write(f"{ip}\n")
             
-            # linglu-02.txt (原Senflare-Pro.txt - 统一格式: IP:443#国家-☆灵鹿优选☆)
+            # linglu-02.txt (统一格式: IP:443#国家-☆灵鹿优选☆)
             with open('linglu-02.txt', 'w', encoding='utf-8') as f:
                 for ip, region_code, delay in pro_region_results:
                     f.write(format_ip_line(ip, 443, region_code) + "\n")
             
-            # linglu-03.txt (原Ranking.txt - 按延迟排序)
+            # linglu-03.txt (按延迟排序)
             sorted_results = sorted(pro_region_results, key=lambda x: x[2])
             with open('linglu-03.txt', 'w', encoding='utf-8') as f:
                 for i, (ip, region_code, delay) in enumerate(sorted_results, 1):
@@ -161,7 +339,9 @@ def main():
     logger.info(f"⏱️ 总耗时: {round(time.time() - start_time, 2)}秒")
     logger.info("🏁 程序完成")
 
+# ===== 程序入口 =====
 if __name__ == "__main__":
+    # 先定义函数，再调用
     load_region_cache()
     clean_expired_cache()
     try:
