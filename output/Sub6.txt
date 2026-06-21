@@ -3,7 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://7878a1a0-583c-4fba-841d-44ca4b1bcd47@fastru.phantom.direct:443?security=reality&encryption=none&pbk=wW4tZPP96i1H0NB4Ql1Qvqepf2ClQ9IsNhcxVdOVWkY&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=fastru.phantom.direct&sid=adc8372900bed89a#⭐️@ANA_SERVICE⭐️ثابت ip⭐️
 vless://7878a1a0-583c-4fba-841d-44ca4b1bcd47@fastsw.phantom.direct:443?security=reality&encryption=none&pbk=wW4tZPP96i1H0NB4Ql1Qvqepf2ClQ9IsNhcxVdOVWkY&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=fastsw.phantom.direct&sid=13171b0dd8985179#⭐️@ANA_SERVICE⭐️ثابت ip⭐️
 vless://7878a1a0-583c-4fba-841d-44ca4b1bcd47@fastsw.phantom.direct:443?security=reality&encryption=none&pbk=wW4tZPP96i1H0NB4Ql1Qvqepf2ClQ9IsNhcxVdOVWkY&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=fastsw.phantom.direct&sid=773353fbea287c00#⭐️@ANA_SERVICE⭐️ثابت ip⭐️
 vless://7896c501-248f-4068-bc2f-363c91ba5122@45.198.87.15:8443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=storage.yandex.net&fp=chrome&pbk=7zd9mJilgjOrg_ohtw23Vmio-pdnYqeP_r-kiWt87Cg&sid=2715592069f36fe7&type=tcp&headerType=none#@Daily_Configs : کانال تلگرام
@@ -503,3 +502,4 @@ vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@46.229.243.144:8443?security=tls&en
 vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@46.229.243.67:8443?encryption=none&security=tls&sni=cdn7-09.vk-cdnvideo.com&fp=chrome&insecure=0&allowInsecure=0&type=tcp&headerType=none#@Daily_Configs
 vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@46.229.243.67:8443?encryption=none&type=tcp&security=tls&headerType=none&sni=cdn9-33.vk-cdnvideo.com&fp=chrome&insecure=1&allowInsecure=1#6https://t.me/FREE_VPN02
 vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@46.229.243.68:8443?security=tls&encryption=none&insecure=0&headerType=none&fp=chrome&type=tcp&allowInsecure=0&sni=cdn7-09.vk-cdnvideo.com#✔︎𝐜𝐡𝐚𝐧𝐧𝐞𝐥➪@ConfigV2rayForFree
+vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@46.229.243.71:8443?encryption=none&type=tcp&security=tls&headerType=none&sni=cdn3-87.vk-cdnvideo.com&insecure=1&allowInsecure=1#12https://t.me/FREE_VPn02

@@ -3,7 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.de1.f2gate.ir:54238?security=reality&encryption=none&pbk=eig4M43BwT0eJfg2Tfu5cHxQ5cWKFv07posBCidoFlk&host=telewebion.ir&headerType=http&fp=chrome&type=tcp&sni=telewebion.ir&sid=510ab49b8c0745a9#✔︎𝐜𝐡𝐚𝐧𝐧𝐞𝐥➪@ConfigV2rayForFree
 vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.fi1.linkora.ir:49429?encryption=none&security=reality&sni=telewebion.ir&fp=chrome&pbk=OQsVeM4sKyLRiGKO1QDfyo4C0xBJJhFB54EhFlcvzGM&sid=62b17aae389bb655&type=tcp&headerType=http&host=telewebion.ir&path=/assets#@Ap_Ir6
 vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.fi1.linkora.ir:49429?security=reality&encryption=none&pbk=OQsVeM4sKyLRiGKO1QDfyo4C0xBJJhFB54EhFlcvzGM&host=telewebion.ir&headerType=http&fp=chrome&type=tcp&sni=telewebion.ir&sid=62b17aae389bb655#✔︎𝐜𝐡𝐚𝐧𝐧𝐞𝐥➪@ConfigV2rayForFree
 vless://d57207d5-bed5-4721-bea8-2741584e2d38@88.216.132.29:443?security=reality&encryption=none&pbk=4l6Ix3bneXShDpYSHoRq_avnztGFMPI-hcGlVbKF0UE&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=de-fra-14.blook.network&sid=a6f01456#4🐝Tel--@V2rayAlpha
@@ -503,3 +502,4 @@ vless://jina@20.79.160.49:443?security=tls&alpn=http/1.1&encryption=none&headerT
 vless://jina@20.79.160.49:443?security=tls&alpn=http/1.1&encryption=none&insecure=1&headerType=none&fp=chrome&type=tcp&allowInsecure=1&flow=xtls-rprx-vision&sni=jina-207916049-direct.yektanet.co#@v2rayngzendegimamad🕊️
 vless://jina@20.79.160.49:443?security=tls&alpn=http/1.1&encryption=none&insecure=1&headerType=none&fp=chrome&type=tcp&allowInsecure=1&flow=xtls-rprx-vision&sni=jina-207916049-direct.yektanet.co#IR-@V2rayAlpha-9
 vless://jina@20.79.162.37:443?security=tls&alpn=h2,http/1.1&encryption=none&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=jina-207916237-direct.yektanet.co#Telegram : @V2ynpv
+vless://telegram_instagram:v2ray_fa3t@172.67.160.192:2086?path=/&security=none&encryption=none&host=DlY.MaF-OpNsAT.iR.&type=ws#🇩🇪@EXPRESSVPN_420🇩🇪
