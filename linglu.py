@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 # ===== 核心配置 =====
 CONFIG = {
     "ip_sources": [
+        'https://ip.164746.xyz',
         'https://api.uouin.com/cloudflare.html',
         'https://api.urlce.com/cloudflare.html',
         'https://addressesapi.090227.xyz/CloudFlareYes',
