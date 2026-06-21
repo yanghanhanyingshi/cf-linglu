@@ -3,12 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://967064b5-3272-431e-8dce-9519acfb94be@94.156.179.71:443?encryption=none&flow=xtls-rprx-vision&fp=&pbk=KS0F6q2PTY1s6y2sH5PdrznYqprIkUBtS1masvcrJjo&security=reality&sid=823257b7b9ab9d02&sni=de2.zestful.bond&type=tcp#%F0%9F%8C%8A23@oneclickvpnkeys
-vless://394f6981-a782-4779-9a85-e6cf22935d93@152.233.28.201:8443?encryption=none&security=tls&sni=ams1.fromblancwithlove.com&type=tcp#%F0%9F%8C%8A28@oneclickvpnkeys
-vless://03575b20-67c2-4512-b15c-72e5440f0c44@ez-421a72.mohamadfarajian09144538950.workers.dev:80?path=%2F&security=none&encryption=none&insecure=0&host=ez-421a72.mohamadfarajian09144538950.workers.dev&fp=ios&type=ws&allowInsecure=0&sni=ez-421a72.mohamadfarajian09144538950.workers.dev#🔵@chillguy_vpn
-vless://03575b20-67c2-4512-b15c-72e5440f0c44@ez-421a72.mohamadfarajian09144538950.workers.dev:443?path=%2F&security=tls&encryption=none&insecure=0&host=ez-421a72.mohamadfarajian09144538950.workers.dev&fp=ios&type=ws&allowInsecure=0&sni=ez-421a72.mohamadfarajian09144538950.workers.dev#🔵@chillguy_vpn
-vless://5501b359-cd6c-431f-b478-f9ded18e4d6a@188.114.97.6:2053?path=%2FeyJqdW5rIjoiZzdoR3kxczdkcUxmIiwicHJvdG9jb2wiOiJ2bCIsIm1vZGUiOiJwcm94eWlwIiwicGFuZWxJUHMiOltdfQ%3D%3D%3Fed%3D2560&security=tls&encryption=none&insecure=0&host=wandering-field-030c.hsusudjfifjdhxccv.workers.dev&type=ws&allowInsecure=0&sni=WAnDERINg-FIelD-030c.HSuSudJFifjDHxCCv.WorkeRS.Dev#%40address_shir_o_khorshid```
-vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@95.133.245.170:8443?security=tls&encryption=none&insecure=1&headerType=none&fp=qq&type=tcp&allowInsecure=1&sni=cdn3-87.vk-cdnvideo.com#🔵@chillguy_vpn
 vless://FREE-4-ALL@107.189.21.7:443?security=reality&encryption=none&pbk=W6fS0Z-WJ5815eTp1KqxU27cff58RiLUOGTm4qwBHRw&headerType=none&fp=random&type=tcp&flow=xtls-rprx-vision&sni=play.google.com&sid=C0DE#🔵@chillguy_vpn
 vless://c27538ca-d170-4182-87e5-aee87c8a0c4a@188.114.97.6:443?encryption=none&security=tls&sni=small-voice-c4c5.itsnewrzan.workers.dev&insecure=0&allowInsecure=0&type=ws&host=small-voice-c4c5.itsnewrzan.workers.dev&path=%2Fproxyip%3D40.233.87.120#🔵@chillguy_vpn
 vless://931729a8-3c20-4841-89a1-f18dc9ce0a6f@162.249.126.198:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=cdn8-90.yahoo.com&fp=firefox&pbk=CMkW1axrhEXoiJ6anMz9XEjlfqlAtEZya7L0b5ZPMyw&sid=8015c191d21aa452&type=tcp&headerType=none#🔵@chillguy_vpn

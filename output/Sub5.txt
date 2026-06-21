@@ -3,12 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?encryption=none&security=tls&sni=default.ssl.fastly.net&fp=chrome&insecure=0&allowInsecure=0&type=ws&host=pan3.global.ssl.fastly.net&path=/#✅  @vistav2ray  👈👈کانال ما ✅
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?path=/&security=tls&encryption=none&insecure=0&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=0&sni=default.ssl.fastly.net#@icv2ray
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?path=/&security=tls&encryption=none&insecure=0&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=0&sni=default.ssl.fastly.net#🪁@TEHRANARGO
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?path=/&security=tls&encryption=none&insecure=0&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=0&sni=default.ssl.fastly.net#🪁@configprxy
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?path=/&security=tls&encryption=none&insecure=1&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=1&sni=default.ssl.fastly.net#@prrofile_purple  ♥️👈 تلگرام
-vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?path=/&security=tls&encryption=none&insecure=1&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=1&sni=default.ssl.fastly.net#♡ @Net2ray
 vless://4fcb91d0-bbc4-480c-b362-216d4a79bb5c@fast.cd-tur4.ir:443?security=tls&encryption=none&insecure=0&host=pan3.global.ssl.fastly.net&type=ws&allowInsecure=0&sni=default.ssl.fastly.net#🕊 @Fear_Config
 vless://4fdec620-73bb-40a7-a8d5-2570a59f1832@45.197.134.89:8443?security=reality&encryption=none&pbk=8qHRGcCezzSu4S-Cz9l19BNRLWm4MkaSwZV3dNrLEwc&headerType=&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=storage.yandex.net&sid=d515d6cfdfe60b02#⚡@V2ray_official
 vless://4fdec620-73bb-40a7-a8d5-2570a59f1832@45.197.134.89:8443?security=reality&encryption=none&pbk=8qHRGcCezzSu4S-Cz9l19BNRLWm4MkaSwZV3dNrLEwc&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=storage.yandex.net&sid=d515d6cfdfe60b02#@FarazV2ray
@@ -503,3 +497,9 @@ vless://7bb6d2aa-6238-48a6-abe2-c7deb083b08e@velsanto.online:8443?security=reali
 vless://7bb7c0fb-a89f-4e64-a303-78c1f5f61781@axs.amirxshot.ir:2095?path=/axs&security=none&encryption=none&host=pl33.sazegostaran-iran.ir&type=ws#@SONIC_2524 کانال روبیکا و تلگرام 🕊⭐
 vless://7bb7c0fb-a89f-4e64-a303-78c1f5f61781@pc.amirxshot.ir:8443?path=/axs&security=tls&encryption=none&insecure=0&host=pc.amirxshot.ir&fp=chrome&type=ws&allowInsecure=0&sni=axs.amirxshot.ir#@SONIC_2524 کانال روبیکا و تلگرام 🕊⭐️
 vless://7c13f803-7c9e-4d3c-a37c-da332dca3bbe@85.198.17.53:8080?security=none&encryption=none&host=digikala.com&headerType=http&type=tcp#svscoonfig
+vless://7c352f3b-6535-788f-fb0c-f28a76d6deb6@rvg2-production.up.railway.app:443?path=/ws/7c352f3b-6535-788f-fb0c-f28a76d6deb6&security=tls&alpn=http/1.1&encryption=none&insecure=0&host=rvg2-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=rvg2-production.up.railway.app#🦉@FreeConfigForYou
+vless://7cd519e5-7626-4e40-878a-b7b753c344c9@188.114.97.6:443?path=/&security=tls&encryption=none&host=t08.tzteam.online&type=ws&sni=t08.tzteam.online#@Shh_proxy ¹
+vless://7d6e2364-4673-16c6-fd58-44ba179f75fc@tmesubgift.up.railway.app:443?encryption=none&security=tls&sni=tmesubgift.up.railway.app&fp=chrome&alpn=http/1.1&insecure=0&allowInsecure=0&type=ws&host=tmesubgift.up.railway.app&path=/ws/7d6e2364-4673-16c6-fd58-44ba179f75fc#92-5
+vless://7d8584e3-410b-4667-a9b3-9a6465d4f999@91.107.255.167:24391?security=none&encryption=none&headerType=none&type=tcp#TEL;Father_vpn
+vless://7d8584e3-410b-4667-a9b3-9a6465d4f999@91.107.255.167:24391?security=none&encryption=none&headerType=none&type=tcp#چنل عضو شو @v2ra_config
+vless://7d876627-abf5-4865-8ff4-03f37d49de5d@37.114.48.146:9443?security=tls&encryption=none&insecure=0&headerType=none&fp=chrome&type=tcp&allowInsecure=0&flow=xtls-rprx-vision&sni=bero-3.bexum.fun#@hopev2ray🌸

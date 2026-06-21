@@ -3,12 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.de1.f2gate.ir:54238?encryption=none&security=reality&sni=telewebion.ir&fp=chrome&pbk=eig4M43BwT0eJfg2Tfu5cHxQ5cWKFv07posBCidoFlk&sid=510ab49b8c0745a9&type=tcp&headerType=http&host=telewebion.ir&path=/assets#@Ap_Ir6
-vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.de1.f2gate.ir:54238?security=reality&encryption=none&pbk=eig4M43BwT0eJfg2Tfu5cHxQ5cWKFv07posBCidoFlk&host=telewebion.ir&headerType=http&fp=chrome&type=tcp&sni=telewebion.ir&sid=510ab49b8c0745a9#✔︎𝐜𝐡𝐚𝐧𝐧𝐞𝐥➪@ConfigV2rayForFree
-vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.fi1.linkora.ir:49429?encryption=none&security=reality&sni=telewebion.ir&fp=chrome&pbk=OQsVeM4sKyLRiGKO1QDfyo4C0xBJJhFB54EhFlcvzGM&sid=62b17aae389bb655&type=tcp&headerType=http&host=telewebion.ir&path=/assets#@Ap_Ir6
-vless://d555a2de-9f94-44f4-aba9-63584b81a36d@zone.fi1.linkora.ir:49429?security=reality&encryption=none&pbk=OQsVeM4sKyLRiGKO1QDfyo4C0xBJJhFB54EhFlcvzGM&host=telewebion.ir&headerType=http&fp=chrome&type=tcp&sni=telewebion.ir&sid=62b17aae389bb655#✔︎𝐜𝐡𝐚𝐧𝐧𝐞𝐥➪@ConfigV2rayForFree
-vless://d57207d5-bed5-4721-bea8-2741584e2d38@88.216.132.29:443?security=reality&encryption=none&pbk=4l6Ix3bneXShDpYSHoRq_avnztGFMPI-hcGlVbKF0UE&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=de-fra-14.blook.network&sid=a6f01456#4🐝Tel--@V2rayAlpha
-vless://d57207d5-bed5-4721-bea8-2741584e2d38@88.216.132.29:443?security=reality&encryption=none&pbk=4l6Ix3bneXShDpYSHoRq_avnztGFMPI-hcGlVbKF0UE&host=/?BIA_TELEGRAM@MARAMBASHI_MARAMBASHI_MARAMBASHI_MARAMBASHI_MARAMBASHI&headerType=none&fp=chrome&spx=/&type=tcp&flow=xtls-rprx-vision&sni=de-fra-14.blook.network&sid=a6f01456#@V2dogs_n
 vless://d5754afc-b328-4e0a-8071-de6d19dc078d@www.speedtest.net:443?path=/proxyip=151.236.29.97&security=tls&encryption=none&host=sik.amirkhorasoni.workers.dev&fp=chrome&type=ws&sni=sik.amirkhorasoni.workers.dev#@ReleaseNet
 vless://d59a47d8-f344-4a0b-81d6-9f68cb8be873@188.114.97.6:2095?path=/?ed=2048&security=none&encryption=none&host=iNFoRmeD-PArt0Y2KT5cRvl.SaMSunGovenS.ir.&type=ws#TEL;Father_vpn
 vless://d60fc3c5-9f07-4cdb-b81f-70af27936bdc@141.101.113.247:8880?security=tls&sni=ex.sue.x10.mx&type=ws&path=/Telegram🇨🇳&host=ex.sue.x10.mx&packetEncoding=xudp&encryption=none#
@@ -503,3 +497,9 @@ vless://fc6f83c4-86a3-4b66-9e01-900b18327a74@germanubhf.dadashinet10.ir:2044?enc
 vless://fc6f83c4-86a3-4b66-9e01-900b18327a74@germanyjkjklj.dadashinet10.ir:2044?encryption=none&security=none&type=tcp&headerType=http&path=/&host=play.google.com#🇩🇪DE-🚀@VPNine1
 vless://fc6f83c4-86a3-4b66-9e01-900b18327a74@lobgfvdas.dadashinet10.ir:2044?encryption=none&security=none&type=tcp&headerType=http&path=/&host=play.google.com#🇳🇱NL-🚀@VPNine1
 vless://fc6f83c4-86a3-4b66-9e01-900b18327a74@sdeovbmttkl.dadashinet10.ir:2044?encryption=none&security=none&type=tcp&headerType=http&path=/&host=play.google.com#🇳🇱NL-🚀@VPNine1
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@108.162.192.75:443?path=/tsghdws&security=tls&encryption=none&host=octopusss4.com&fp=chrome&type=ws&sni=octopusss4.com#⚡@V2ray_official
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@141.193.213.10:443?path=/tsghdws&security=tls&encryption=none&host=octopusss4.com&fp=chrome&allowinsecure=0&type=ws&sni=octopusss4.com#@hi_proxy_iran :👈کانال تلگرام
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@141.193.213.10:443?path=/tsghdws&security=tls&encryption=none&host=octopusss4.com&fp=chrome&type=ws&sni=octopusss4.com#@appsooner کانال تلگرام 🕊️
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@141.193.213.10:443?path=/tsghdws&security=tls&encryption=none&host=octopusss4.com&fp=chrome&type=ws&sni=octopusss4.com#@internet_azad_2026
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@141.193.213.10:443?path=/tsghdws&security=tls&encryption=none&host=octopusss4.com&fp=chrome&type=ws&sni=octopusss4.com#⚡@V2ray_official
+vless://fc965ad9-bdd7-4815-ad71-b39ec5972dc1@141.193.213.10:443?path=/tsghdws&security=tls&encryption=none&insecure=0&host=octopusss4.com&fp=chrome&type=ws&allowInsecure=0&sni=octopusss4.com#☄️Tel: @Proxy_Vpney (4)

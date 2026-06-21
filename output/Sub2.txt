@@ -3,12 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-ss://YWVzLTI1Ni1nY206UmV4bkJnVTdFVjVBRHhH@94.156.250.148:7001#🇬🇧 Join+Telegram:@Farah_VPN 🇬🇧
-ss://YWVzLTI1Ni1nY206WEtGS2wyclVMaklwNzQ=@23.157.40.120:8008#🩵+@Azarakhsh_Proxy+🩷
-ss://YWVzLTI1Ni1nY206WEtGS2wyclVMaklwNzQ=@23.157.40.120:8009#🩵+@Azarakhsh_Proxy+🩷
-ss://YWVzLTI1Ni1nY206WkdNeVpXTTJabUV5WWpnek5EUTVOV1F3TUdFMU56WmtOMlUxT0Rjdw@188.121.117.190:11134#@v2raybaaz ¹
-ss://YWVzLTI1Ni1nY206YzVmY2RmNzgyOTExMmNiNA==@46.29.163.104:24213#🇷🇺RU-🚀@VPNine1
-ss://YWVzLTI1Ni1nY206ZGFkYTEyMDM@3.8.48.222:80#@SONIC_2524 کانال روبیکا و تلگرام 🕊⭐️
 ss://YWVzLTI1Ni1nY206ZGFkYTEyMDNAMy44LjQ4LjIyMjo4MA==#@bored_vpn
 ss://YWVzLTI1Ni1nY206ZmFCQW9ENTRrODdVSkc3@23.157.88.61:2376#🩵+@Azarakhsh_Proxy+🩷
 ss://YWVzLTI1Ni1nY206a1NMamJyQmM4NA@78.129.155.63:3030?#@meliproxyy
@@ -503,3 +497,9 @@ trojan://telegram-id-privatevpns@3.126.148.235:22222?security=tls&alpn=http/1.1&
 trojan://telegram-id-privatevpns@3.69.117.42:22222?security=tls&alpn=http/1.1&headerType=none&type=tcp&sni=trojan.burgerip.co.uk#(S102)🇩🇪t.me/PrivateVPNs
 trojan://telegram-id-privatevpns@3.69.162.50:22222?security=tls&alpn=http/1.1&insecure=0&headerType=none&type=tcp&allowInsecure=0&sni=trojan.burgerip.co.uk#🦉@FreeConfigForYou
 trojan://telegram-id-privatevpns@35.158.190.80:22222?security=tls&alpn=http/1.1&headerType=none&type=tcp&sni=trojan.burgerip.co.uk#(S101)🇩🇪t.me/PrivateVPNs
+trojan://telegram-id-privatevpns@35.181.86.50:22222?security=tls&alpn=http/1.1&headerType=none&type=tcp&sni=trojan.burgerip.co.uk#(S104)🇨🇵t.me/PrivateVPNs
+trojan://telegram-id-privatevpns@52.58.146.145:22222?security=tls&alpn=http/1.1&headerType=none&type=tcp&sni=trojan.burgerip.co.uk#(S101)🇩🇪t.me/PrivateVPNs
+trojan://telegram-id-privatevpns@63.181.146.220:22222?security=tls&alpn=http/1.1&headerType=none&type=tcp&sni=trojan.burgerip.co.uk#(S101)🇩🇪t.me/PrivateVPNs
+trojan://tg-dns68@162.159.152.138:443?security=tls&sni=vip.putata.eu.org&type=ws&host=vip.putata.eu.org#@Hope_Net-join-us-on-Telegram
+trojan://zsamwtZNsm-2MKkyTHSRbQ@sv4.hosttbd.ir:10004?security=none&headerType=none&allowInsecure=0&type=tcp&path=/&host=fast.com#@NETMelliAnti
+vless://00000000-0000-4000-8000-000000000000@89.22.238.213:46209?path=/@Marisa_kristi&security=tls&encryption=none&insecure=0&host=g1ixej-urdn-dlqnu1ol.gespz5p7nm04ej96ia7qc9tvsktgtx.workers.dev&fp=chrome&type=ws&allowInsecure=0&sni=g1ixej-urdn-dlqnu1ol.gespz5p7nm04ej96ia7qc9tvsktgtx.workers.dev#🇸🇪@FreakConfig
