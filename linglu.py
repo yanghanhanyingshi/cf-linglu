@@ -38,6 +38,7 @@ CONFIG = {
         'https://cf.090227.xyz/cmcc',
         'https://cf.090227.xyz/ct',
         'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt',
+        'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/Mobile.txt',
         'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/addressesapi.txt',
         'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
     ],
