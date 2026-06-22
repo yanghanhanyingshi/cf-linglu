@@ -3,6 +3,11 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
+trojan://mitivpn@27.50.48.49:443?path=/index.html/ed=mitivpn&security=tls&alpn=http/1.1&insecure=0&host=gamingdll.ir&fp=chrome&type=ws&allowInsecure=0&sni=gamingdll.ir#TEL;Father_vpn
+trojan://mitivpn@45.130.125.220:443?path=index.html=mitivpn&security=tls&alpn=http/1.1&insecure=0&host=linkkon-a.ir&fp=chrome&type=ws&allowInsecure=0&sni=linkkon-a.ir#@Leecher56
+trojan://mitivpn@45.130.125.220:443?path=index.html=mitivpn&security=tls&alpn=http/1.1&insecure=0&host=linkkon-a.ir&fp=chrome&type=ws&allowInsecure=0&sni=linkkon-a.ir#@V2ConfigPro
+trojan://n-S5Kuz58YgwljisuLEJltip2OWf1ourWz@185.137.157.250:443?sni=fra250.clientfirewall.click#🦀30@oneclickvpnkeys
+trojan://oJRk-2+NoHJ3N4frj_O2.0CzT+WAgdcs7b@144.31.55.35:28126?security=tls&headerType=&type=tcp&sni=www.game-bridge.click#⚡@V2ray_official
 trojan://qgkcPVkYGsDIc-BHX93E2A@nabz.ir:2083?security=tls&sni=udb.nyanners.ir.&fp=chrome&insecure=0&allowInsecure=0&type=ws&path=/#سیم تایوان
 trojan://r-_YbwF.j0TtHVewoFIppramjAnmSfqYzJ@172.238.120.124:443?security=tls&insecure=0&headerType=none&fp=chrome&type=tcp&allowInsecure=0#TEL;Father_vpn
 trojan://r-_YbwF.j0TtHVewoFIppramjAnmSfqYzJ@172.238.120.124:443?security=tls&insecure=0&headerType=none&type=tcp&allowInsecure=0#@v2rayngzendegimamad🕊️
@@ -498,8 +503,3 @@ vless://1c3927cb-6141-4473-a17d-4b290f7c6980@159.112.235.52:443?Telegram=@Gozarg
 vless://1c3927cb-6141-4473-a17d-4b290f7c6980@159.112.235.52:443?mode=packet-up&path=/xn--q9jyb4c&security=tls&encryption=none&extra={"xPaddingBytes":"100-1000"}&insecure=0&host=fi.dns.xn--q9jyb4c&fp=chrome&type=xhttp&allowInsecure=0&sni=ProxyVPN11.dns.xn--q9jyb4c#@filembad
 vless://1c3927cb-6141-4473-a17d-4b290f7c6980@159.112.235.52:443?mode=packet-up&path=/xn--q9jyb4c&security=tls&encryption=none&extra={"xPaddingBytes":"100-1000"}&insecure=0&host=fi.dns.xn--q9jyb4c&fp=chrome&type=xhttp&allowInsecure=0&sni=ProxyVPN11.dns.xn--q9jyb4c#🪼@ProxyVPN11 - 6
 vless://1c3927cb-6141-4473-a17d-4b290f7c6980@188.114.97.6:443?mode=packet-up&path=/xn--q9jyb4c&security=tls&encryption=none&extra={"xPaddingBytes":"100-1000"}&insecure=0&host=fi.dns.xn--q9jyb4c&fp=chrome&type=xhttp&allowInsecure=0&sni=fi.dns.xn--q9jyb4c#@V2dogs_n
-vless://1c3927cb-6141-4473-a17d-4b290f7c6980@8.6.112.121:443?mode=packet-up&path=/xn--q9jyb4c&security=tls&encryption=none&extra={"xPaddingBytes":"100-1000"}&insecure=0&host=fi.dns.xn--q9jyb4c&fp=chrome&type=xhttp&allowInsecure=0&sni=ProxyVPN11.dns.xn--q9jyb4c#🇫🇮 @ProxyVPN11
-vless://1cd30bda-e748-4c4c-a24e-3d827db13034@m.datammr.ir:80?path=/&security=&encryption=none&host=play.google.com&type=ws#Proxy_Se7en
-vless://1ce9392f-caf4-48f7-bbb9-475b101fbde0@188.114.97.6:443?path=/id-tksi&security=tls&encryption=none&insecure=0&host=graph.instagram.com.cyylr.eu.cc&type=ws&allowInsecure=0&sni=graph.instagram.com.cyylr.eu.cc#TEL:Father_vpn
-vless://1cf6cae1-e402-412b-954c-8b8c27cbdac4@forallpanel.srtongston.ir:8880?path=/?ed=2082&security=&encryption=none&host=Cdn8-pro.postshup.ir.&type=httpupgrade#⚡@V2ray_official
-vless://1cf6cae1-e402-412b-954c-8b8c27cbdac4@forallpanel.srtongston.ir:8880?path=/?ed=2082&security=&encryption=none&host=cdn-pro5.postshup.ir&type=httpupgrade#⚡@V2ray_official
