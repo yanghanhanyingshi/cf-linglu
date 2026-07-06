@@ -12,14 +12,14 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 授予写入权限
+      contents: write
     
     steps:
     - name: 检出代码仓库
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0          # 拉取完整历史，避免浅克隆问题
-        persist-credentials: true  # 保留 Git 凭证
+        fetch-depth: 0
+        persist-credentials: true
     
     - name: 设置 Python 环境
       uses: actions/setup-python@v5
@@ -30,10 +30,42 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests beautifulsoup4 lxml
+      shell: bash
     
-    - name: 运行爬虫脚本
+    - name: 运行爬虫脚本（可调试版本）
       run: |
-        python 6610000.py
+        set -e
+        echo "=== 开始执行爬虫 ==="
+        python -u 6610000.py
+        echo "=== 爬虫执行结束 ==="
+      shell: bash
+    
+    - name: 显示文件状态
+      if: always()  # 无论成功失败都执行
+      run: |
+        echo "=== 当前目录文件列表 ==="
+        ls -al
+        echo ""
+        echo "=== IP文件内容（前5行）==="
+        head -5 6610000ip.txt 2>/dev/null || echo "IP文件不存在或为空"
+        echo ""
+        echo "=== 域名文件内容（前5行）==="
+        head -5 6610000cf.txt 2>/dev/null || echo "域名文件不存在或为空"
+      shell: bash
+    
+    - name: 显示错误日志
+      if: failure()
+      run: |
+        echo "=========================================="
+        echo "❌ Python 脚本运行失败！"
+        echo "=========================================="
+        echo "=== 当前目录文件列表 ==="
+        ls -al
+        echo ""
+        echo "=== Python 环境信息 ==="
+        python --version
+        pip list
+      shell: bash
     
     - name: 自动提交更改
       uses: stefanzweifel/git-auto-commit-action@v5
@@ -43,7 +75,4 @@ jobs:
         commit_user_name: "github-actions[bot]"
         commit_user_email: "github-actions[bot]@users.noreply.github.com"
         commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-        # 如果文件没有变化，不会创建提交
-        skip_fetch: false  # 在提交前先拉取最新更改
-        # 可选：只处理特定分支
-        # branch: main
+        skip_fetch: false
