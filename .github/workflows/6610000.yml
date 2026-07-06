@@ -1,0 +1,47 @@
+# .github/workflows/6610000.yml
+name: 定时爬取 Cloudflare 优选 IP 和域名
+
+on:
+  # 定时触发：每6小时运行一次
+  schedule:
+    - cron: '0 */6 * * *'
+  # 允许手动触发工作流
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码仓库
+      uses: actions/checkout@v4
+      with:
+        # 确保有足够的权限提交更改
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 设置 Python 环境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 lxml
+    
+    - name: 运行爬虫脚本
+      run: |
+        python 6610000.py
+    
+    - name: 提交并推送更新到仓库
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add 6610000ip.txt 6610000cf.txt
+        # 检查是否有文件变更，有则提交
+        if git diff --staged --quiet; then
+          echo "没有检测到文件变更，跳过提交。"
+        else
+          git commit -m "自动更新 IP 和域名列表 [skip ci]"
+          git push
+        fi
