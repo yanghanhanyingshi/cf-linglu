@@ -12,15 +12,14 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 明确授予写入权限
+      contents: write  # 授予写入权限
     
     steps:
     - name: 检出代码仓库
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        # 拉取完整历史，避免浅克隆导致的问题
-        fetch-depth: 0
+        fetch-depth: 0          # 拉取完整历史，避免浅克隆问题
+        persist-credentials: true  # 保留 Git 凭证
     
     - name: 设置 Python 环境
       uses: actions/setup-python@v5
@@ -36,26 +35,15 @@ jobs:
       run: |
         python 6610000.py
     
-    - name: 提交并推送更新到仓库
-      run: |
-        # 配置 Git 用户信息
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # 添加文件到暂存区
-        git add 6610000ip.txt 6610000cf.txt
-        
-        # 检查是否有文件变更
-        if git diff --staged --quiet; then
-          echo "没有检测到文件变更，跳过提交。"
-          exit 0
-        else
-          # 有变更，进行提交和推送
-          git commit -m "自动更新 IP 和域名列表 [skip ci]"
-          
-          # 尝试推送，如果远程有更新则先拉取再推送
-          git pull --rebase origin main || git pull --rebase origin master
-          git push
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: 自动提交更改
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "自动更新 IP 和域名列表 [skip ci]"
+        file_pattern: 6610000ip.txt 6610000cf.txt
+        commit_user_name: "github-actions[bot]"
+        commit_user_email: "github-actions[bot]@users.noreply.github.com"
+        commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+        # 如果文件没有变化，不会创建提交
+        skip_fetch: false  # 在提交前先拉取最新更改
+        # 可选：只处理特定分支
+        # branch: main
