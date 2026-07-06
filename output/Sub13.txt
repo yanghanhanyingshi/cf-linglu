@@ -3,6 +3,7 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
+vless://9d9fa173-453d-41a3-99e5-9aff6ea74329@77.90.63.81:3000?type=ws&host=7nnoiou0z.3xn99hzq2sh7iekktpkeq7rofs3qc8iohrqs4pb9p.workers.dev&path=%2F%40Marisa_kristi&security=tls&sni=7nnoiou0z.3xn99hzq2sh7iekktpkeq7rofs3qc8iohrqs4pb9p.workers.dev&fp=chrome#%F0%9F%8C%90%20Anycast-IP%20%7C%20%F0%9F%87%A6%F0%9F%87%B7%20%F0%9F%87%AE%F0%9F%87%AA%20%F0%9F%87%AF%F0%9F%87%B5%20%F0%9F%87%B3%F0%9F%87%B1%20%7C%20%5BBL%5D
 vless://0970324b-8c61-4ae7-8c3f-385a6f1e17e4@103.160.204.56:443?path=%2F&security=tls&encryption=none&insecure=0&host=vpn47.cc.cd&fp=chrome&type=ws&allowInsecure=0&sni=vpn47.cc.cd#%F0%9F%8C%90%20Anycast-IP%20%7C%20%F0%9F%87%A8%F0%9F%87%A6%20%F0%9F%87%AB%F0%9F%87%AE%20%7C%20%5BBL%5D
 vless://0970324b-8c61-4ae7-8c3f-385a6f1e17e4@205.233.181.117:443?path=%2F&security=tls&encryption=none&host=vpn47.cc.cd&fp=chrome&type=ws&sni=vpn47.cc.cd#%F0%9F%8C%90%20Anycast-IP%20%7C%20%F0%9F%87%A8%F0%9F%87%A6%20%F0%9F%87%AB%F0%9F%87%AE%20%7C%20%5BBL%5D
 vless://0970324b-8c61-4ae7-8c3f-385a6f1e17e4@31.43.179.163:443?path=%2F&security=tls&encryption=none&insecure=0&host=vpn47.cc.cd&fp=chrome&type=ws&allowInsecure=0&sni=vpn47.cc.cd#%F0%9F%8C%90%20Anycast-IP%20%7C%20%F0%9F%87%A8%F0%9F%87%A6%20%F0%9F%87%AB%F0%9F%87%AE%20%7C%20%5BBL%5D
@@ -502,4 +503,3 @@ vless://2f466a3b-5093-4556-8759-c87c8511c753@69.84.182.20:443?security=tls&sni=r
 
 vless://35f332d0-0b05-4cc6-91cb-ec0d4465055f@96.47.230.5:17567?encryption=none&type=tcp&security=reality&flow=xtls-rprx-vision&fp=chrome&sni=my.yahoo.com&pbk=v0qz2dJb5tmR8eeRTMJJ3g5m1wwUyhutkaOMNFLnAns&sid=00#%E2%9D%8CSeattle-GetAFreeNode
 
-vless://3b475934-cb2a-4d96-b260-5e50cca5d430@96.47.230.5:32510?encryption=none&type=tcp&security=reality&flow=xtls-rprx-vision&fp=chrome&sni=m.yahoo.com&pbk=v0qz2dJb5tmR8eeRTMJJ3g5m1wwUyhutkaOMNFLnAns&sid=00#%E2%9D%8CSeattle-GetAFreeNode
