@@ -6,54 +6,69 @@ from bs4 import BeautifulSoup
 import re
 import os
 from datetime import datetime
-import time
-import sys
 
-# 获取脚本所在目录的绝对路径
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# 使用绝对路径定义输出文件
-IP_FILE = os.path.join(BASE_DIR, "6610000ip.txt")
-DOMAIN_FILE = os.path.join(BASE_DIR, "6610000cf.txt")
 TARGET_URL = "https://cf.6610000.xyz/"
 
-# ... (fetch_page_content, parse_ip_and_domain, save_to_file 函数与之前完全一致，无需修改) ...
+IP_FILE = "6610000ip.txt"
+DOMAIN_FILE = "6610000cf.txt"
+
+
+def fetch_page_content(url):
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+        r = requests.get(url, headers=headers, timeout=20)
+        r.raise_for_status()
+        return r.text
+    except Exception as e:
+        print("请求失败:", e)
+        return None
+
+
+def parse_ip_and_domain(html):
+    text = BeautifulSoup(html, "html.parser").get_text()
+
+    ipv4 = re.findall(r'\b(?:\d{1,3}\.){3}\d{1,3}\b', text)
+    domains = re.findall(r'\b[a-zA-Z0-9.-]+\.6610000\.xyz\b', text)
+
+    valid_ips = []
+    for ip in ipv4:
+        parts = ip.split(".")
+        if len(parts) == 4 and all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
+            valid_ips.append(ip)
+
+    return set(valid_ips), set(domains)
+
+
+def save_file(filename, data):
+    if not data:
+        print(f"{filename} 为空，跳过写入")
+        return
+
+    with open(filename, "w", encoding="utf-8") as f:
+        for i in sorted(data):
+            f.write(i + "\n")
+
+    print(f"写入 {filename}: {len(data)} 条")
+
 
 def main():
-    """主函数 - 带完整异常捕获"""
-    try:
-        print("=" * 50)
-        print("🚀 开始执行爬虫程序")
-        print(f"⏰ 时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"📁 文件保存目录: {BASE_DIR}")
-        print("=" * 50)
-        
-        html_content = fetch_page_content(TARGET_URL)
-        if not html_content:
-            print("❌ 爬取失败，无法获取网页内容")
-            return 0
-        
-        ips, domains = parse_ip_and_domain(html_content)
-        
-        ip_success = save_to_file(ips, IP_FILE)
-        domain_success = save_to_file(domains, DOMAIN_FILE)
-        
-        print("=" * 50)
-        if ip_success and domain_success:
-            print("🎉 爬取完成！")
-        else:
-            print("⚠️ 部分数据保存失败，但程序已正常结束")
-        print("=" * 50)
-        return 0
-        
-    except Exception as e:
-        print("=" * 50)
-        print(f"💥 发生异常: {type(e).__name__}")
-        print(f"📝 异常信息: {str(e)}")
-        print("=" * 50)
-        import traceback
-        traceback.print_exc()
+    print("=== 开始执行爬虫 ===")
+
+    html = fetch_page_content(TARGET_URL)
+    if not html:
+        print("获取失败，退出")
         return 1
+
+    ips, domains = parse_ip_and_domain(html)
+
+    save_file(IP_FILE, ips)
+    save_file(DOMAIN_FILE, domains)
+
+    print("完成")
+    return 0
+
 
 if __name__ == "__main__":
     exit(main())
