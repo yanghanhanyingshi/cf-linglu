@@ -37,6 +37,7 @@ CONFIG = {
         'https://www.wetest.vip/page/cloudflare/address_v4.html',
         'https://cf.090227.xyz/cmcc',
         'https://cf.090227.xyz/ct',
+        'https://cf.6610000.xyz',
         'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt',
         'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/Mobile.txt',
         'https://raw.githubusercontent.com/xiagefei/CFBestIP/refs/heads/main/addressesapi.txt',
