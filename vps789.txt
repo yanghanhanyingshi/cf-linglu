@@ -46,6 +46,7 @@ neko.cloudflaree.eu.org:443#☆灵鹿优选☆
 oo.xzhi.eu.org:443#☆灵鹿优选☆
 cdn.wzkf88.com:443#☆灵鹿优选☆
 cloudflare-ip.mofashi.ltd:443#☆灵鹿优选☆
+cdns.doon.eu.org:443#☆灵鹿优选☆
 openai.com:443#☆灵鹿优选☆
 fn.130519.xyz:443#☆灵鹿优选☆
 cf.3666888.xyz:443#☆灵鹿优选☆
@@ -197,4 +198,3 @@ debot.ai:443#☆灵鹿优选☆
 cmcc.090227.xyz:443#☆灵鹿优选☆
 v.recipes:443#☆灵鹿优选☆
 www.epicgames.com:443#☆灵鹿优选☆
-zabc.net:443#☆灵鹿优选☆
