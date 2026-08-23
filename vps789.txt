@@ -64,7 +64,6 @@ sanwang.cf.3666888.xyz:443#☆灵鹿优选☆
 vip.cf.3666888.xyz:443#☆灵鹿优选☆
 cf.cf.3666888.xyz:443#☆灵鹿优选☆
 cloudflare.rainyfall.com:443#☆灵鹿优选☆
-123.cf.3666888.xyz:443#☆灵鹿优选☆
 2.cf.3666888.xyz:443#☆灵鹿优选☆
 qocu.cf.3666888.xyz:443#☆灵鹿优选☆
 hfqek.cf.3666888.xyz:443#☆灵鹿优选☆
@@ -198,3 +197,4 @@ cmcc.090227.xyz:443#☆灵鹿优选☆
 v.recipes:443#☆灵鹿优选☆
 www.epicgames.com:443#☆灵鹿优选☆
 zabc.net:443#☆灵鹿优选☆
+api.uniapi.io:443#☆灵鹿优选☆
