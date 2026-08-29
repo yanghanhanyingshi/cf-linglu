@@ -3,7 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://e24ad7a8-385b-475d-b063-5e6a19d50700@69.46.46.38:443?path=/ws/vless/e24ad7a8-385b-475d-b063-5e6a19d50700?ed=2048&security=tls&alpn=h3&encryption=none&insecure=0&host=web-production-cfc50.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-cfc50.up.railway.app#@FarazV2ray
 vless://e24ad7a8-385b-475d-b063-5e6a19d50700@69.46.46.38:443?path=/ws/vless/e24ad7a8-385b-475d-b063-5e6a19d50700?ed=2048&security=tls&alpn=h3&encryption=none&insecure=0&host=web-production-cfc50.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-cfc50.up.railway.app#@V2rayng_Fast
 vless://e24ad7a8-385b-475d-b063-5e6a19d50700@69.46.46.38:443?path=/ws/vless/e24ad7a8-385b-475d-b063-5e6a19d50700?ed=2048&security=tls&alpn=h3&encryption=none&insecure=0&host=web-production-cfc50.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-cfc50.up.railway.app#@irdusti⁴-200G
 vless://e25486c7-3342-4777-a82d-89d485f844dc@45.13.151.46:48689/?type=httpupgrade&encryption=none&flow=&host=www.filimo.com&path=/host#罗马尼亚
@@ -503,3 +502,4 @@ vless://ff0a44f4-bf3c-489b-1f04-9bdba987613f@s1.zynetraq.ir:2087?alpn=h2,http/1.
 vless://ff221baa-f856-4873-b707-f79c7acfbfd0@185.146.173.95:8080?security=none&type=ws&host=V2ray-_-_-_-_-MdVpnSec.TelegramChannelJoinBede.com.&path=/#@Hope_Net-join-us-on-Telegram
 vless://ff4873f3-ed68-7059-926c-6958fde22478@tmesubgift.up.railway.app:443?encryption=none&security=tls&sni=tmesubgift.up.railway.app&fp=chrome&alpn=http/1.1&insecure=0&allowInsecure=0&type=ws&host=tmesubgift.up.railway.app&path=/ws/ff4873f3-ed68-7059-926c-6958fde22478#113
 vless://ff4873f3-ed68-7059-926c-6958fde22478@tmesubgift1.up.railway.app:443?encryption=none&security=tls&sni=tmesubgift1.up.railway.app&fp=chrome&alpn=http/1.1&insecure=0&allowInsecure=0&type=ws&host=tmesubgift1.up.railway.app&path=/ws/ff4873f3-ed68-7059-926c-6958fde22478#114
+vless://ff9307e6-f04a-4905-8cd4-7e690bd63eb8@104.17.119.248:8080?path=/eyJqdW5rIjoiYUVJQnRNVEk1MlJKUiIsInByb3RvY29sIjoidmwiLCJtb2RlIjoicHJveHlpcCIsInBhbmVsSVBzIjpbXX0=?ed=2560&security=none&encryption=none&host=green-flower-361d.iamxenor.workers.dev&type=ws#@KAFING_2
