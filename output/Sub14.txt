@@ -3,6 +3,9 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
+vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.38.119:443?security=tls&encryption=none&insecure=0&host=t1s1.rittbo.kdns.fr&type=ws&allowInsecure=0&sni=t1s1.rittbo.kdns.fr#@V2rayng3
+vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.38.119:443?security=tls&encryption=none&insecure=0&host=t1s1.rittbo.kdns.fr&type=ws&allowInsecure=0&sni=t1s1.rittbo.kdns.fr#نت ملی @fastkanfig
+vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.38.119:8443?path=/&security=tls&encryption=none&insecure=0&host=t1s1.rittbo.kdns.fr&fp=chrome&type=ws&allowInsecure=0&sni=t1s1.rittbo.kdns.fr#@fastkanfig 654
 vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.38.119:8443?security=tls&encryption=none&insecure=0&fp=chrome&type=ws&allowInsecure=0&sni=t1s1.rittbo.kdns.fr#🦉@FreeConfigForYou
 vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.42.163:443?encryption=none&security=tls&sni=t1s1.rittbo.kdns.fr&fp=chrome&insecure=0&allowInsecure=0&ech=cloudflare-ech.com+https://dns.alidns.com/dns-query&type=ws&host=t1s1.rittbo.kdns.fr&path=/#t.me/ConfigFori  -  Config 88289
 vless://eeb6823c-b926-4ea2-866a-5542edd26e59@162.159.44.180:443?path=/&security=tls&encryption=none&insecure=0&host=t1s1.rittbo.kdns.fr&fp=chrome&type=ws&allowInsecure=0&sni=t1s1.rittbo.kdns.fr#@hopev2ray💕
@@ -496,10 +499,7 @@ vmess://eyJuZXQiOiAidGNwIiwgInBvcnQiOiAiMjg5OTciLCAiYWRkIjogInN0YXIuc3Rhcm5pY2sy
 vmess://f836c736-87fc-4fde-aabc-00857ecdff3e@129.146.77.248:39495?encryption=auto&host=129.146.77.248&path=/cctv13.m3u8&security=none&type=ws#🐲92@oneclickvpnkeys
 # profile-title: 🏴 ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | Mobile-150
 # profile-update-interval: 1
-# Date/Time: 2026-08-30 / 14:52 (Moscow)
+# Date/Time: 2026-08-30 / 18:42 (Moscow)
 # Количество: 150
 # For more info and VPN-configs - visit: www.github.com/igareck/vpn-configs-for-russia
 
-vless://423b1d79-08c4-403f-9d5e-c541f791b55f@195.123.226.114:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=eu-central.cendora.ru&pbk=b-Cm9hX-3UHsS1L_lnUB6AMjuKhlN1IDdBbZ506itjI&sid=00bca5982f82d083&type=tcp&headerType=none&fp=qq#%F0%9F%87%A7%F0%9F%87%AC%20Bulgaria%2C%20Sofia%20%7C%20%F0%9F%8C%90%20%7C%20%5BBL%5D
-vless://423b1d79-08c4-403f-9d5e-c541f791b55f@195.123.226.114:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=eu-central.cendora.ru&pbk=b-Cm9hX-3UHsS1L_lnUB6AMjuKhlN1IDdBbZ506itjI&sid=00bca5982f82d083&type=tcp&headerType=none&host=eu-central.cendora.ru&path=%2F&fp=qq#%F0%9F%87%A7%F0%9F%87%AC%20Bulgaria%2C%20Sofia%20%7C%20%F0%9F%8C%90%20%7C%20%5BBL%5D
-vless://2f019ee3-d1a0-4a41-84a6-26c9b5d2b9f0@45.150.192.23:443?encryption=none&security=reality&sni=www.kicker.de&fp=firefox&pbk=gYAqsAGLfK9TURq7vMWWsm-rzrGN3i3eSv7XyPNzAgU&flow=xtls-rprx-vision#%F0%9F%87%A8%F0%9F%87%B1%20Chile%2C%20Antofagasta%20%7C%20%F0%9F%8C%90%20%7C%20%5BBL%5D
