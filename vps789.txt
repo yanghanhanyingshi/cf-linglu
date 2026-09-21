@@ -72,7 +72,7 @@ www.mlkj888.com:443#☆灵鹿优选☆
 hzytjy.cn:443#☆灵鹿优选☆
 dongbanghong.com:443#☆灵鹿优选☆
 www.xflash.vip:443#☆灵鹿优选☆
-gitlab.com:443#☆灵鹿优选☆
+131.youxuan.cf.090227.xyz:443#☆灵鹿优选☆
 www.elysee.fr:443#☆灵鹿优选☆
 qoj.ac:443#☆灵鹿优选☆
 a.pub.network:443#☆灵鹿优选☆
@@ -81,7 +81,6 @@ digitalocean.com:443#☆灵鹿优选☆
 bestcf.top:443#☆灵鹿优选☆
 cnamefuckxxs.yuchen.icu:443#☆灵鹿优选☆
 bestcf.030101.xyz:443#☆灵鹿优选☆
-ip.skk.moe:443#☆灵鹿优选☆
 fbi.gov:443#☆灵鹿优选☆
 cfyx.aliyun.20237737.xyz:443#☆灵鹿优选☆
 www.ox.ac.uk:443#☆灵鹿优选☆
@@ -89,11 +88,11 @@ jp.cf.3666888.xyz:443#☆灵鹿优选☆
 cfvip.cf.3666888.xyz:443#☆灵鹿优选☆
 chinwa.cf.090227.xyz:443#☆灵鹿优选☆
 cf.vvhan.com:443#☆灵鹿优选☆
-131.youxuan.cf.090227.xyz:443#☆灵鹿优选☆
 kick.com:443#☆灵鹿优选☆
 api.producthunt.com:443#☆灵鹿优选☆
 videodelivery.net:443#☆灵鹿优选☆
 cdnjs.com:443#☆灵鹿优选☆
+gitlab.com:443#☆灵鹿优选☆
 codeforces.com:443#☆灵鹿优选☆
 yg4.ygkkk.dpdns.org:443#☆灵鹿优选☆
 api.cloudflare.com:443#☆灵鹿优选☆
@@ -123,11 +122,13 @@ hentaiverse.org:443#☆灵鹿优选☆
 kali.download:443#☆灵鹿优选☆
 s.bookcdn.com:443#☆灵鹿优选☆
 t.213891.xyz:443#☆灵鹿优选☆
+ip.skk.moe:443#☆灵鹿优选☆
 666.cf.cname.vvhan.com:443#☆灵鹿优选☆
 cmcc.877774.xyz:443#☆灵鹿优选☆
 hostinger.com:443#☆灵鹿优选☆
 www.jimdo.com:443#☆灵鹿优选☆
 challenges.cloudflare.com:443#☆灵鹿优选☆
+yg6.ygkkk.dpdns.org:443#☆灵鹿优选☆
 www.broadcom.com:443#☆灵鹿优选☆
 ikankeji.com:443#☆灵鹿优选☆
 securecircle.com:443#☆灵鹿优选☆
@@ -139,6 +140,7 @@ moodle.org:443#☆灵鹿优选☆
 clickhouse.com:443#☆灵鹿优选☆
 blog.cloudflare.com:443#☆灵鹿优选☆
 www.copilot.com:443#☆灵鹿优选☆
+mfa.gov.ua:443#☆灵鹿优选☆
 www.speedtest.net:443#☆灵鹿优选☆
 redis.io:443#☆灵鹿优选☆
 dnew.cc:443#☆灵鹿优选☆
@@ -146,16 +148,13 @@ www.npmjs.com:443#☆灵鹿优选☆
 www.ventusky.com:443#☆灵鹿优选☆
 3.cf.3666888.xyz:443#☆灵鹿优选☆
 10.cf.3666888.xyz:443#☆灵鹿优选☆
-yg6.ygkkk.dpdns.org:443#☆灵鹿优选☆
 mox.moxing.lol:443#☆灵鹿优选☆
 www.carousell.sg:443#☆灵鹿优选☆
-cdn.2x.nz:443#☆灵鹿优选☆
 cdnjs.loli.net:443#☆灵鹿优选☆
 cf.777791.xyz:443#☆灵鹿优选☆
 static.elfsight.com:443#☆灵鹿优选☆
 fonts.cdnfonts.com:443#☆灵鹿优选☆
 ping.pe:443#☆灵鹿优选☆
-debot.ai:443#☆灵鹿优选☆
 mvnrepository.com:443#☆灵鹿优选☆
 sourceforge.net:443#☆灵鹿优选☆
 moondroplab.com:443#☆灵鹿优选☆
@@ -170,9 +169,9 @@ www.chess.com:443#☆灵鹿优选☆
 tracker.metricool.com:443#☆灵鹿优选☆
 visa.com:443#☆灵鹿优选☆
 dash.cloudflare.com:443#☆灵鹿优选☆
-mfa.gov.ua:443#☆灵鹿优选☆
 www.whatismyip.com:443#☆灵鹿优选☆
 dynadot.com:443#☆灵鹿优选☆
+debot.ai:443#☆灵鹿优选☆
 virtualcommtraining.verizon.com:443#☆灵鹿优选☆
 crowdstrike.com:443#☆灵鹿优选☆
 sci-hub.al:443#☆灵鹿优选☆
@@ -180,7 +179,6 @@ img.css.sd:443#☆灵鹿优选☆
 yg3.ygkkk.dpdns.org:443#☆灵鹿优选☆
 111.cf.cname.vvhan.com:443#☆灵鹿优选☆
 china-unicom.cname.cloudflare.468123.xyz:443#☆灵鹿优选☆
-dns.163189.xyz:443#☆灵鹿优选☆
 prizepicks.com:443#☆灵鹿优选☆
 cf.cloudflare.182682.xyz:443#☆灵鹿优选☆
 v.recipes:443#☆灵鹿优选☆
@@ -195,6 +193,8 @@ i.pixiv.re:443#☆灵鹿优选☆
 cloudflare.182682.xyz:443#☆灵鹿优选☆
 ip.sb:443#☆灵鹿优选☆
 moegirl.icu:443#☆灵鹿优选☆
-cf.877774.xyz:443#☆灵鹿优选☆
 singapore.com:443#☆灵鹿优选☆
 cf.godns.cc:443#☆灵鹿优选☆
+cn.vuejs.org:443#☆灵鹿优选☆
+racerseseries.sky.com:443#☆灵鹿优选☆
+jquery.com:443#☆灵鹿优选☆
