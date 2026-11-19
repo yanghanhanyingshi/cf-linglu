@@ -3,9 +3,6 @@
 #subscription-userinfo: upload=29; download=12; total=10737418240000000; expire=2546249531
 #support-url: https://github.com/barry-far/V2ray-config
 #profile-web-page-url: https://github.com/barry-far/V2ray-config
-vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.131.65.105:443?security=reality&encryption=none&pbk=K41mxSIT1WcM8QEiZQxs7n_qOroaPucFMHamzWICKVQ&headerType=none&fp=chrome&type=tcp&sni=playza-app.com#🇩🇪DE-🚀@VPNine1
-vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.131.65.105:443?type=tcp&security=reality&fp=chrome&pbk=K41mxSIT1WcM8QEiZQxs7n_qOroaPucFMHamzWICKVQ&sni=playza-app.com#@VPsave
-vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.144.52.195:443?encryption=none&flow=xtls-rprx-vision&pbk=wpKYWqa_j7WXClXDdSL-llXhjH918G_U7jfpHAMSGWk&security=reality&sni=fl-modx.nodexphere.net&type=tcp&fp=chrome#🇫🇮05 | ⚡Telegram = t.me/ex_proxies
 vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.144.52.195:443?encryption=none&flow=xtls-rprx-vision&pbk=wpKYWqa_j7WXClXDdSL-llXhjH918G_U7jfpHAMSGWk&security=reality&sni=fl-modx.nodexphere.net&type=tcp&fp=chrome#🇫🇮09 | ⚡Telegram = t.me/ex_proxies
 vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.144.52.195:443?encryption=none&flow=xtls-rprx-vision&pbk=wpKYWqa_j7WXClXDdSL-llXhjH918G_U7jfpHAMSGWk&security=reality&sni=fl-modx.nodexphere.net&type=tcp&fp=chrome#🇫🇮16 | ⚡Telegram = t.me/ex_proxies
 vless://955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6@45.144.52.195:443?security=reality&encryption=none&pbk=wpKYWqa_j7WXClXDdSL-llXhjH918G_U7jfpHAMSGWk&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=fl-modx.nodexphere.net#12970@proxy_online_net
@@ -503,3 +500,6 @@ vless://a16bd0e2-ff2e-4e4c-a955-0c684255a065@67.159.52.81:443?security=reality&t
 vless://a1750ade-801f-4e3e-a5d2-de825771205d@151.80.147.30:443?security=reality&encryption=none&pbk=Ij3Iz1jqht6zLOy9uI0iusTy4n1oIr7gpgTwRTtA8kY&headerType=none&type=tcp&flow=xtls-rprx-vision&sni=speedtest.net&sid=42b395462da31c0e#@v2rayng3
 vless://a18d0149-a511-4489-ad4f-4496d8d91ca3@87.120.106.95:443?mode=auto&path=/&security=reality&encryption=none&pbk=iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM&host=rss.worldoftanks.eu&fp=chrome&type=xhttp&sni=rss.worldoftanks.eu#12935@proxy_online_net
 vless://a18f7c2d-9e45-4b8a-af3c-1d5e7f9c8b2a@185.32.6.47:443?security=reality&encryption=none&pbk=8h8t5eBWL9oERK7xWHQLFJE5j6sZdgNDQAs3EGnNbho&headerType=none&fp=chrome&type=tcp&sni=ads.x5.ru&sid=2f49bccf11150ef2#@v2ray_configs_pools | 13
+vless://a18f7c2d-9e45-4b8a-af3c-1d5e7f9c8b2a@83.168.71.216:443?security=reality&encryption=none&pbk=8h8t5eBWL9oERK7xWHQLFJE5j6sZdgNDQAs3EGnNbho&headerType=none&fp=chrome&type=tcp&sni=ads.x5.ru&sid=2f49bccf11150ef2#@leviconfigs🪐-5
+vless://a18f7c2d-9e45-4b8a-af3c-1d5e7f9c8b2a@83.168.71.216:443?security=reality&encryption=none&pbk=8h8t5eBWL9oERK7xWHQLFJE5j6sZdgNDQAs3EGnNbho&host=JOIN_BEDE_TELEGRAM@leviconfigs&headerType=none&fp=chrome&type=tcp&sni=ads.x5.ru&sid=2f49bccf11150ef2#@leviconfigs🪐-23
+vless://a18f7c2d-9e45-4b8a-af3c-1d5e7f9c8b2a@83.168.71.216:443?security=reality&encryption=none&pbk=8h8t5eBWL9oERK7xWHQLFJE5j6sZdgNDQAs3EGnNbho&host=JOIN_BEDE_TELEGRAM@leviconfigs&headerType=none&fp=chrome&type=tcp&sni=ads.x5.ru&sid=2f49bccf11150ef2#@leviconfigs🪐-4
